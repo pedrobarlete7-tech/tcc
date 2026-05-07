@@ -1,0 +1,232 @@
+/* =========================
+   CONFIGURAÇÕES GERAIS
+========================= */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    transition:
+        background-color 0.45s ease,
+        color 0.45s ease;
+}
+
+/* Transição suave para componentes comuns do Bootstrap */
+main,
+section,
+article,
+aside,
+header,
+footer,
+div,
+.card,
+.btn,
+.dropdown-menu,
+.offcanvas,
+.modal-content,
+.accordion-item,
+.list-group-item,
+.table,
+.form-control,
+.form-select,
+.input-group-text,
+.alert,
+.badge,
+.pagination,
+.breadcrumb,
+.toast,
+.progress,
+.border,
+.rounded,
+.shadow-sm,
+.shadow {
+    transition:
+        background-color 0.45s ease,
+        color 0.45s ease,
+        border-color 0.45s ease,
+        box-shadow 0.45s ease;
+}
+
+.navbar,
+nav
+{
+    background-color: #fff;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+/* Seleção de texto personalizada */
+::selection {
+    background: rgba(13, 110, 253, 0.28);
+    color: inherit;
+}
+
+/* Links com transição */
+a {
+    transition: color 0.25s ease, opacity 0.25s ease;
+}
+
+a:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   BOTÃO FLUTUANTE DO TEMA
+========================= */
+.floating-theme-btn {
+    position: fixed;
+    right: 22px;
+    bottom: 28px;
+    z-index: 9999;
+
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+    color: #ffffff;
+
+    background: linear-gradient(135deg, #032d6d, #780000);
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.22),
+        0 2px 8px rgba(0, 0, 0, 0.12);
+
+    cursor: pointer;
+    outline: none;
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        filter 0.4s ease,
+        opacity 0.4s ease;
+}
+
+/* Efeito ao passar o mouse */
+.floating-theme-btn:hover {
+    transform: translateY(-5px) scale(1.06);
+    box-shadow:
+        0 16px 30px rgba(0, 0, 0, 0.28),
+        0 4px 12px rgba(0, 0, 0, 0.14);
+    filter: brightness(1.08);
+}
+
+/* Efeito ao clicar */
+.floating-theme-btn:active {
+    transform: scale(0.95);
+}
+
+/* Acessibilidade no foco por teclado */
+.floating-theme-btn:focus-visible {
+    box-shadow:
+        0 0 0 4px rgba(13, 110, 253, 0.25),
+        0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* Ícone com animação elegante */
+.floating-theme-btn i {
+    transition:
+        transform 0.45s ease,
+        opacity 0.3s ease;
+}
+
+/* Pequena animação do ícone no hover */
+.floating-theme-btn:hover i {
+    transform: rotate(18deg) scale(1.08);
+}
+
+/* Animação ao carregar a página */
+@keyframes floatInThemeButton {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.floating-theme-btn {
+    animation: floatInThemeButton 0.5s ease-out;
+}
+
+/* =========================
+   DETALHES EXTRAS ELEGANTES
+========================= */
+
+/* Cards e blocos com visual mais refinado */
+.card,
+.bg-body-tertiary.border,
+section.border,
+div.border.rounded,
+div.border.rounded-4 {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* Botões com toque mais suave */
+.btn {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Inputs mais agradáveis visualmente */
+.form-control,
+.form-select {
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+@media (max-width: 768px) {
+    .floating-theme-btn {
+        right: 16px;
+        bottom: 20px;
+        width: 52px;
+        height: 52px;
+        font-size: 20px;
+    }
+}
+
+/* =========================
+   RESPEITO A USUÁRIOS COM
+   PREFERÊNCIA POR MENOS
+   MOVIMENTO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
