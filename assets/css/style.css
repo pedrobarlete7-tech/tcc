@@ -158,6 +158,7 @@ a:hover {
     animation: floatInThemeButton 0.5s ease-out;
 }
 
+
 [data-bs-theme="dark"] .navbar .nav-link,
 [data-bs-theme="dark"] .navbar .navbar-brand {
     color: #ffffff !important;
@@ -176,6 +177,7 @@ a:hover {
 [data-bs-theme="light"] .navbar .navbar-brand {
     color: #000000 !important;
 }
+
 
 /* =========================
    DETALHES EXTRAS ELEGANTES
