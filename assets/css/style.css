@@ -160,12 +160,22 @@ a:hover {
 
 [data-bs-theme="dark"] .navbar .nav-link,
 [data-bs-theme="dark"] .navbar .navbar-brand {
-    color: #000000 !important;
+    color: #ffffff !important;
 }
 [data-bs-theme="dark"] .navbar,
 [data-bs-theme="dark"] nav {
     background-color: #1e1e1e !important;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+}
+[data-bs-theme="dark"] .btn-outline-secondary {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+
+[data-bs-theme="light"] .navbar .nav-link,
+[data-bs-theme="light"] .navbar .navbar-brand {
+    color: #000000 !important;
 }
 
 /* =========================
