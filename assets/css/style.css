@@ -160,9 +160,8 @@ a:hover {
 
 [data-bs-theme="dark"] .navbar .nav-link,
 [data-bs-theme="dark"] .navbar .navbar-brand {
-    color: #918e8e !important;
+    color: #000000 !important;
 }
-
 [data-bs-theme="dark"] .navbar,
 [data-bs-theme="dark"] nav {
     background-color: #1e1e1e !important;
