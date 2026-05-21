@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
         margin: 0;
@@ -54,14 +54,100 @@
         z-index: 1001;
     }
 
-    .slide-menu ul,li{
-        padding: 15px 20px;
+    .slide-menu > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .slide-menu .menu-item {
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .slide-menu ul,li:hover{
-        background: rgba(255, 255, 255, 0.1);
+    .slide-menu .menu-materia {
+        padding: 15px 20px;
         cursor: pointer;
+        user-select: none;
+    }
+
+    .slide-menu .menu-materia:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .slide-menu .menu-submenu {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0 0 10px 0;
+    }
+
+    .slide-menu .menu-item.is-open .menu-submenu {
+        display: block;
+    }
+
+    .slide-menu .menu-submenu li {
+        padding: 0;
+        border-bottom: none;
+    }
+
+    .slide-menu .menu-submenu-item {
+        display: block;
+        padding: 10px 20px 10px 32px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .slide-menu .menu-submenu-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .slide-menu .menu-assunto-item {
+        padding: 0;
+        border-bottom: none;
+    }
+
+    .slide-menu .menu-assunto {
+        padding: 10px 20px 10px 32px;
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .slide-menu .menu-assunto:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .slide-menu .menu-detalhes {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .slide-menu .menu-assunto-item.is-open .menu-detalhes {
+        display: block;
+    }
+
+    .slide-menu .menu-detalhes li {
+        padding: 0;
+        border-bottom: none;
+    }
+
+    .slide-menu .menu-detalhe-item {
+        display: block;
+        padding: 8px 20px 8px 44px;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    .slide-menu .menu-detalhe-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
     }
 
     .overlay{
@@ -130,30 +216,25 @@
 
 
 
-    <input type="checkbox" id="menu-toggle">
+     <input type="checkbox" id="menu-toggle">
 
 
-    <label for="menu-toggle" class="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
-
-    <div class="slide-menu">
-        <ul>
-            <li>******</li>
-            <li>******</li>
-            <li>******</li>
-            <li>******</li>
-        </ul>
-    </div>
-
-    <div class="overlay"></div>
-
-    <div class="container">
-
-    </div>
-
+     <label for="menu-toggle" class="menu-btn">
+         <span></span>
+         <span></span>
+         <span></span>
+     </label>
+ 
+     <div class="slide-menu" id="menu-lateral">
+         <ul><!-- renderizado por materias.js --></ul>
+     </div>
+ 
+     <div class="overlay"></div>
+ 
+     <div class="container">
+ 
+     </div>
+ 
 <!-- fOOTER -->
 
 <section>
@@ -201,32 +282,32 @@
     <i class="bi bi-moon-stars-fill"></i>
 </button>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const button = document.getElementById('toggleTheme');
-    const html = document.documentElement;
-    const icon = button.querySelector('i');
-
-    function applyTheme(theme) {
-        html.setAttribute('data-bs-theme', theme);
-
-        icon.className = theme === 'dark'
-            ? 'bi bi-sun-fill'
-            : 'bi bi-moon-stars-fill';
-    }
-
-    // Carregar tema salvo
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
-
-    // Clique
-    button.addEventListener('click', function () {
-        const currentTheme = html.getAttribute('data-bs-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('toggleTheme');
+        const html = document.documentElement;
+        const icon = button.querySelector('i');
+    
+        function applyTheme(theme) {
+            html.setAttribute('data-bs-theme', theme);
+    
+            icon.className = theme === 'dark'
+                ? 'bi bi-sun-fill'
+                : 'bi bi-moon-stars-fill';
+        }
+    
+        // Carregar tema salvo
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+    
+        // Clique
+        button.addEventListener('click', function () {
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
     });
-});
 </script>
  <script src="assets/js/bootstrap.bundle.min.js"></script>
  <script src="./assets/js/materias.js"></script>
