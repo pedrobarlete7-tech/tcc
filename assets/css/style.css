@@ -59,7 +59,6 @@ nav
     background: rgba(13, 110, 253, 0.28);
     color: inherit;
 }
-
 .cadastro {
     background-color: #780000;
     color: white;
@@ -190,6 +189,10 @@ a:hover {
 [data-bs-theme="light"] .navbar .nav-link,
 [data-bs-theme="light"] .navbar .navbar-brand {
     color: #000000 !important;
+}
+
+[data-bs-theme="dark"] .menu-btn span {
+    background-color: #ffffff;
 }
 
 
