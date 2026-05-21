@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.caixa{
+    
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    width: 450px;
+    justify-content: center;
+    padding: 50px;
+    
+}
+
+ .campoNome input, .campoEmail input, .campoSenha input, .VerificarSenha input{
+    padding: 15px;
+    
+} 
