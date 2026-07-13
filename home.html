@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
     <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
 
 <body class="bg-body text-body">
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light py-4">
         <div class="container-fluid">
@@ -25,56 +28,79 @@
             <div class="collapse navbar-collapse" id="nav_lc">
                 <ul class="navbar-nav my-3 my-lg-0 ms-lg-3 me-auto">
                     <li class="nav-item me-4"><a class="nav-link" href="home.html">Home</a></li>
-                    <li class="nav-item me-4"><a class="nav-link" href="#">Sobre</a></li>
+                    <li class="nav-item me-4"><a class="nav-link" href="sobre.html">Sobre</a></li>
                     <li class="nav-item me-4"><a class="nav-link" href="#">Termos de Uso</a></li>
                     <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                 </ul>
-                <div><a class="btn btn-outline-secondary me-2" href="index.html">Entrar</a><a
-                        class="cadastro btn btn-preimary" href="#"><i class="fa-solid fa-user"></i></a></div>
+                <!-- Menu Lateral -->
+                <input type="checkbox" id="menu-toggle">
+
+
+                <label for="menu-toggle" class="menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+
+                <div class="slide-menu" id="menu-lateral">
+                    <ul>
+                        <!-- renderizado por materias.js -->
+                    </ul>
+                </div>
+
+                <div class="overlay"></div>
+                <!-- Fim menu Lateral -->
+
+                <!-- Menu lateral direito -->
+                <input type="checkbox" id="menu-toggle-right">
+
+                <label for="menu-toggle-right" class="menu-btn-right">
+                    <i class="fas fa-user-circle"></i>
+                </label>
+
+                <div class="slide-menu-right">
+                    <ul>
+                        <li><a href="#">Perfil</a></li>
+                        <li><a href="#">Configurações</a></li>
+                        <li><a href="#">Notificações</a></li>
+                        <li><a href="#">Sair</a></li>
+                    </ul>
+                </div>
+
+                <div class="overlay-right"></div>
+                <!-- Fim menu Lateral Direita -->
+
             </div>
         </div>
     </nav>
     <!-- FIM NAVBAR -->
 
-    <!-- Menu Lateral -->
-    <input type="checkbox" id="menu-toggle">
-
-
-    <label for="menu-toggle" class="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
-
-    <div class="slide-menu" id="menu-lateral">
-        <ul>
-            <!-- renderizado por materias.js -->
-        </ul>
-    </div>
-
-    <div class="overlay"></div>
-    <!-- Fim menu Lateral -->
-
+    <!-- conteudo da pagaina -->
     <div class="container">
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
-        <p>Conteudo ainda não feito</p>
+        <div class="conteudo-home">
+
+            <div class="texto-home">
+                <h2>EXEMPLO</h2>
+
+                <p>
+                    EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO
+                    EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO
+                    EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO.
+                </p>
+
+                <p>
+                    EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO
+                    EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO EXEMPLO.
+                </p>
+            </div>
+
+            <div class="video-home">
+                <div class="video-exemplo">
+                    VÍDEO
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <!-- fOOTER -->
@@ -129,6 +155,9 @@
             </div>
         </div>
     </section>
+
+    <!-- Fim Footer -->
+
     <button id="toggleTheme" class="floating-theme-btn">
         <i class="bi bi-moon-stars-fill"></i>
     </button>
