@@ -282,3 +282,7 @@
     transform: rotate(-45deg) translateY(-20px);
     background: #fff;
 }
+
+.perfil{
+    margin-right: 60px;
+}
