@@ -18,7 +18,7 @@
     <h2>Cadastre-se</h2>
     <form class="row g-3 needs-validation" method="POST" novalidate>
       <div class="campoNome">
-        <!-- <label for="validationCustom01" class="form-label">Nome</label> -->
+
         <input type="text" class="form-control" id="validationCustom01" placeholder="Insira seu nome completo" required>
         <div class="invalid-feedback">
           Este campo tem que conter seu nome.
@@ -26,29 +26,31 @@
       </div>
 
       <div class="campoEmail">
-        <!-- <label for="validationCustomUsername" class="form-label">E-mail</label> -->
+
         <div class="input-group has-validation">
-          <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" placeholder="Insira seu E-mail" minlength="6" required>
+          <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend"
+            placeholder="Insira seu E-mail" minlength="6" required>
           <div class="invalid-feedback">
             Por favor coloque um E-mail válido.
           </div>
         </div>
       </div>
-            <div class="campoSenha">
-        <!-- <label for="validationCustom05" class="form-label">Senha</label> -->
+      <div class="campoSenha">
+
         <input type="password" class="form-control" id="senha" placeholder="Insira sua senha" minlength="6" required>
         <div class="invalid-feedback">
           Informe uma senha com pelo menos 6 caracteres.
         </div>
       </div>
       <div class="confirmaSenha">
-        <!-- <label for="validationCustom01" class="form-label">Confirmacao</label> -->
+
         <input type="password" class="form-control" id="confirmar_senha" placeholder="Confirme a sua senha!" required>
         <div class="VerificarSenha"></div>
-                <div class="invalid-feedback">
+        <div class="invalid-feedback">
           Confirme a senha.
         </div>
       </div>
+
       <!-- <div class="row">
            Senha 
         <div class="col-md-6 mb-3">
@@ -68,8 +70,10 @@
             Confirme a senha.
           </div>
         </div>
-      </div>--> 
-      <div class="col-12"> 
+      </div>-->
+
+      <div class="col-12">
+
         <!-- <div class="form-check"> -
           <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
           <label class="form-check-label" for="invalidCheck">
@@ -80,8 +84,6 @@
           </div>
         </div>
       </div> -->
-
-
 
         <div class="col-12">
           <button class="btn btn-primary" type="submit" id="bcad">Cadastrar</button>
@@ -160,7 +162,7 @@
     <script>
       const senha = document.getElementById('senha');
       const confirmarSenha = document.getElementById('confirmar_senha');
-      
+
       confirmarSenha.addEventListener('input', () => {
 
         if (senha.value !== confirmarSenha.value) {
