@@ -13,6 +13,7 @@ body {
 }
 
 /* Transição suave para componentes comuns do Bootstrap */
+
 main,
 section,
 article,
@@ -68,6 +69,7 @@ nav
     height: 50px;
     position: relative;
 }
+
 
 .cadastro:hover{
     background-color: #a90303;
@@ -190,6 +192,10 @@ a:hover {
 [data-bs-theme="light"] .navbar .nav-link,
 [data-bs-theme="light"] .navbar .navbar-brand {
     color: #000000 !important;
+}
+
+[data-bs-theme="dark"] .menu-btn span {
+    background-color: #ffffff;
 }
 
 
