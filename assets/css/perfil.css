@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    width: 700px;
+    height: 500px;
+    margin-top: 50px;
+    border: 1px solid black;
+}
+
+.caixa_menor{
+    height: 475px;
+    width: 675px;
+}
+
+.foto{
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    background:#d8d8d8;
+    right: 100px;
+}
+
+.perfil{
+    width: 12rem;
+    height: 10rem;
+}
