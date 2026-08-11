@@ -125,25 +125,6 @@ body {
     color: #343a40;
 }
 
-/* Botão professor */
-.btn-professor {
-    margin-top: 5px;
-
-    padding: 12px 22px;
-
-    background: #0d6efd;
-    color: white;
-
-    border: none;
-    border-radius: 8px;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-}
 
 .btn-professor:hover {
     background: #0b5ed7;
