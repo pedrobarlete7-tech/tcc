@@ -1,14 +1,14 @@
 <?php
 // Arquivo de conexão com o banco de dados
 
-$host = '10.68.103.57';
+$host = '2.25.135.118';
 $db   = 'tcc';
 $user = 'tcc_user';
-$pass = 'tcc123456!';
+$pass = 'Tcc2026!';
 $charset = 'utf8mb4';
 
 try {
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $dsn = "mysql:host=$host;dbname=$db; charset=$charset";
 
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Exibe erros

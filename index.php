@@ -57,7 +57,7 @@
       <img class="mb-4" src="" alt="" width="72" height="57" />
       <h1 class="h3 mb-3 fw-normal">Entre no sistema!</h1>
       <div class="form-floating">
-        <input type="Email" name="email" id="email" class="form-control" placeholder="000.000.000-00" maxlength="14"
+        <input type="Email" name="email" id="email" class="form-control" placeholder="000.000.000-00"
           required />
         <label for="floatingInput">Email</label>
       </div>
