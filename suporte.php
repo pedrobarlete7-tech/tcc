@@ -13,8 +13,8 @@
 
 <body>
     <div class="sup" id="sup">
-        <form action="home.html" method="post">
-               <a class="btn-voltar" href="home.html">
+        <form action="index.php" method="post">
+               <a class="btn-voltar" href="index.php">
             ← VOLTAR
         </a>
             <label for="nome">Nome:</label>
