@@ -1,4 +1,4 @@
-<?php require_once 'includes/header.php'; ?>
+  
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -12,13 +12,14 @@
     <title>Contato - Escola</title>
 
     <link rel="stylesheet" href="assets/css/contato.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
 </head>
 
 <body>
 
 	<!-- BOTÃO VOLTAR -->
-<a href="home.html" class="btn-voltar">
+<a href="index.php" class="btn-voltar">
     ← Voltar
 </a>
 
