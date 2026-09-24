@@ -27,7 +27,7 @@
             </button>
             <div class="collapse navbar-collapse" id="nav_lc">
                 <ul class="navbar-nav my-3 my-lg-0 ms-lg-3 me-auto">
-                    <li class="nav-item me-4"><a class="nav-link" href="home.php">Home</a></li>
+                    <li class="nav-item me-4"><a class="nav-link" href="index.php">Home</a></li>
                     <li class="nav-item me-4"><a class="nav-link" href="sobre.php">Sobre</a></li>
                     <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                 </ul>
@@ -52,7 +52,7 @@
 
                 <!-- Menu lateral direita -->
                 <div class="perfil">
-                    <a class="btn btn-outline-secondary me-2" id="entrar" href="index.html">Entrar</a>
+                    <a class="btn btn-outline-secondary me-2" id="entrar" href="login.php">Entrar</a>
                     <input type="checkbox" id="menu-toggle-right">
                     <label for="menu-toggle-right" class="menu-btn-right">
                         <i class="fas fa-user-circle"></i>
