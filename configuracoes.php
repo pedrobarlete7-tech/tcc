@@ -17,7 +17,7 @@
     <main class="main">
 
         <!-- BOTÃO VOLTAR -->
-        <a href="#" class="back-button">
+        <a href="index.php" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
             Voltar
         </a>
