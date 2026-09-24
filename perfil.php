@@ -16,7 +16,7 @@
 
     <div class="container">
 
-        <a class="btn-voltar" href="home.html">
+        <a class="btn-voltar" href="index.html">
             ← VOLTAR
         </a>
 
