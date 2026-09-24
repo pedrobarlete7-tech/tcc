@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #212529;
+}
+
+.container {
+    width: 700px;
+    min-height: 500px;
+
+    padding: 30px 40px;
+
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Botão voltar */
+.btn-voltar {
+    padding: 10px 16px;
+
+    background: transparent;
+    color: #333;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 15px;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-voltar:hover {
+    background: #f0f0f0;
+}
+
+/* Área do perfil */
+.perfil {
+    margin-top: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Foto */
+.foto {
+    width: 130px;
+    height: 130px;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #e0e0e0;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.foto img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* Informações */
+.informacoes {
+    width: 100%;
+    max-width: 500px;
+
+    margin-top: 25px;
+}
+
+.informacoes h1 {
+    margin-bottom: 30px;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    color: #212529;
+    text-align: center;
+}
+
+.campo {
+    margin-bottom: 24px;
+}
+
+.label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.campo p {
+    padding: 12px 15px;
+
+    background: #f8f9fa;
+
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+
+    font-size: 16px;
+    color: #343a40;
+}
+
+
+.btn-professor:hover {
+    background: #0b5ed7;
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 12px rgba(13, 110, 253, 0.25);
+}
+
+/* Responsividade */
+@media (max-width: 750px) {
+    .container {
+        width: 90%;
+        min-height: auto;
+
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .foto {
+        width: 110px;
+        height: 110px;
+    }
+
+    .informacoes h1 {
+        font-size: 26px;
+    }
+}

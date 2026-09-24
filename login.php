@@ -57,7 +57,7 @@
       <img class="mb-4" src="" alt="" width="72" height="57" />
       <h1 class="h3 mb-3 fw-normal">Entre no sistema!</h1>
       <div class="form-floating">
-        <input type="Email" name="email" id="email" class="form-control" placeholder="000.000.000-00" maxlength="14"
+        <input type="Email" name="email" id="email" class="form-control" placeholder="000.000.000-00"
           required />
         <label for="floatingInput">Email</label>
       </div>
@@ -86,7 +86,7 @@
         Entrar
       </button>
       <div class="text-center mt-3">
-        <p>Não tem cadastro? <a href="cad.html">Cadastre-se!</a></p>
+        <p>Não tem cadastro? <a href="cadastro.php">Cadastre-se!</a></p>
 
       </div>
       <p class="mt-5 mb-3 text-body-secondary">&copy; 2026 EnsinoTec - Todos os direitos reservados</p>

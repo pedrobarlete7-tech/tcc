@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>conteudo exemplo</title>
+    <title>TCC 2026</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/menu.css">
-    <link rel="stylesheet" href="assets/css/conteudo.css">
+    <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
@@ -27,9 +27,8 @@
             </button>
             <div class="collapse navbar-collapse" id="nav_lc">
                 <ul class="navbar-nav my-3 my-lg-0 ms-lg-3 me-auto">
-                    <li class="nav-item me-4"><a class="nav-link" href="home.html">Home</a></li>
-                    <li class="nav-item me-4"><a class="nav-link" href="sobre.html">Sobre</a></li>
-                    <li class="nav-item me-4"><a class="nav-link" href="#">Termos de Uso</a></li>
+                    <li class="nav-item me-4"><a class="nav-link" href="home.php">Home</a></li>
+                    <li class="nav-item me-4"><a class="nav-link" href="sobre.php">Sobre</a></li>
                     <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                 </ul>
                 <!-- Menu Lateral -->
@@ -51,7 +50,7 @@
                 <div class="overlay"></div>
                 <!-- Fim menu Lateral -->
 
-                <!-- Menu Lateral Direita -->
+                <!-- Menu lateral direita -->
                 <div class="perfil">
                     <a class="btn btn-outline-secondary me-2" id="entrar" href="index.html">Entrar</a>
                     <input type="checkbox" id="menu-toggle-right">
@@ -61,9 +60,7 @@
 
                     <div class="slide-menu-right">
                         <ul>
-                            <li><a href="#">Perfil</a></li>
-                            <li><a href="#">Configurações</a></li>
-                            <li><a href="#">Notificações</a></li>
+                            <li><a href="configuracoes.php">Configurações</a></li>
                             <li><a href="#">Sair</a></li>
                         </ul>
                     </div>
@@ -77,92 +74,25 @@
     </nav>
     <!-- FIM NAVBAR -->
 
-    <!-- Menu Lateral -->
-    <input type="checkbox" id="menu-toggle">
+    <!-- conteudo da pagaina -->
+    <div class="container">
+        <div class="conteudo-home">
 
+            <div class="texto-home">
+                <h2>Como Funciona?</h2>
+                <p>
+                   O EnsinoTec funciona como uma plataforma educacional desenvolvida para reunir diferentes conteúdos e métodos de estudo em um único ambiente, facilitando o acesso dos alunos aos materiais disponibilizados. Para utilizar os recursos da plataforma, o usuário pode realizar seu cadastro informando os dados solicitados e, posteriormente, acessar sua conta por meio do login, utilizando e-mail e senha. Após a entrada, o usuário é direcionado para a tela inicial, onde pode acessar os conteúdos educacionais e as demais funcionalidades do site. A organização dos conteúdos é realizada por disciplinas e categorias.
+                </p>
+            </div>
 
-    <label for="menu-toggle" class="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
+            <div class="video-home">
+                <div class="video-exemplo">
+                    VÍDEO
+                </div>
+            </div>
 
-    <div class="slide-menu" id="menu-lateral">
-        <ul>
-            <!-- renderizado por materias.js -->
-        </ul>
+        </div>
     </div>
-
-    <div class="overlay"></div>
-    <!-- Fim menu Lateral -->
-
-    <main class="conteudo">
-
-        <h1>NOME DA MATÉRIA</h1>
-
-        <div class="resumo">
-            <h3>PEQUENA EXPLICAÇÃO</h3>
-            <p>EXEMPLO</p>
-        </div>
-
-        <div class="imagem">
-            IMAGEM
-        </div>
-
-        <div class="texto-grande">
-            <h2>EXPLICAÇÃO DA MATÉRIA</h2>
-
-            <p>EXEMPLO</p>
-
-            <p>EXEMPLO</p>
-
-            <p>EXEMPLO</p>
-
-            <p>EXEMPLO</p>
-        </div>
-
-        <div class="mapa-mental">
-            <h2>MAPA MENTAL</h2>
-
-            <div class="caixa-mapa">
-                MAPA MENTAL
-            </div>
-        </div>
-
-        <div class="video">
-            <h2>VÍDEO</h2>
-
-            <div class="caixa-video">
-                VÍDEO
-            </div>
-        </div>
-
-        <div class="exercicios">
-
-            <h2>EXERCÍCIOS</h2>
-
-            <div class="questao">
-                EXEMPLO
-            </div>
-
-            <div class="questao">
-                EXEMPLO
-            </div>
-
-            <div class="questao">
-                EXEMPLO
-            </div>
-
-            <div class="questao">
-                EXEMPLO
-            </div>
-
-            <div class="questao">
-                EXEMPLO
-            </div>
-        </div>
-
-    </main>
 
     <!-- fOOTER -->
 
@@ -216,6 +146,7 @@
             </div>
         </div>
     </section>
+
     <!-- Fim Footer -->
 
     <button id="toggleTheme" class="floating-theme-btn">
