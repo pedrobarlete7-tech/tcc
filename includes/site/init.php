@@ -20,6 +20,4 @@ if (!preg_match('~^uploads/perfis/[a-zA-Z0-9_/-]+\.(?:png|jpe?g|webp)$~i', $foto
     $fotoUsuario = '';
 }
 
-// Replace this PHP data source with a repository when the database is integrated.
-// Content 1 is the existing Matemática entry used by conteudo.php.
-$materias = [['titulo' => 'Matemática', 'url' => 'conteudo.php?id_conteudo=1']];
+// ALTERADO: as matérias agora são consultadas em materias.php pelo header.
