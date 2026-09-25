@@ -1,231 +1,87 @@
+<?php
+require_once __DIR__ . '/includes/site/init.php';
+$nome = '';
+$email = '';
+$aceite = false;
+$erros = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = is_string($_POST['nome'] ?? null) ? trim($_POST['nome']) : '';
+    $email = is_string($_POST['email'] ?? null) ? trim($_POST['email']) : '';
+    $senha = is_string($_POST['senha'] ?? null) ? $_POST['senha'] : '';
+    $confirmacao = is_string($_POST['confirmar_senha'] ?? null) ? $_POST['confirmar_senha'] : '';
+    $aceite = ($_POST['aceite_termos'] ?? '') === '1';
+    if ($nome === '') $erros[] = 'Informe seu nome completo.';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $erros[] = 'Informe um e-mail válido.';
+    if (strlen($senha) < 6) $erros[] = 'A senha deve ter pelo menos 6 caracteres.';
+    if ($senha !== $confirmacao) $erros[] = 'As senhas não coincidem.';
+    if (!$aceite) $erros[] = 'Aceite os termos de uso para continuar.';
+    if (!$erros) $erros[] = 'O cadastro ainda não está disponível. Sua conta não foi criada; a integração está em preparação.';
+}
+?>
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cadastro</title>
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/cad.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#100c0e">
+    <title>Crie sua conta — EnsinoTec</title>
+    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="assets/css/cadastro.css">
+    <script src="assets/js/cadastro.js" defer></script>
 </head>
-
-<body>
-
-  <div class="caixa">
-    <h2>Cadastre-se</h2>
-    <form class="row g-3 needs-validation" method="POST" novalidate>
-      <div class="campoNome">
-
-        <input type="text" class="form-control" id="validationCustom01" placeholder="Insira seu nome completo" required>
-        <div class="invalid-feedback">
-          Este campo tem que conter seu nome.
-        </div>
-      </div>
-
-      <div class="campoEmail">
-
-        <div class="input-group has-validation">
-          <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend"
-            placeholder="Insira seu E-mail" minlength="6" required>
-          <div class="invalid-feedback">
-            Por favor coloque um E-mail válido.
-          </div>
-        </div>
-      </div>
-      <div class="campoSenha">
-
-        <input type="password" class="form-control" id="senha" placeholder="Insira sua senha" minlength="6" required>
-        <div class="invalid-feedback">
-          Informe uma senha com pelo menos 6 caracteres.
-        </div>
-      </div>
-      <div class="confirmaSenha">
-
-        <input type="password" class="form-control" id="confirmar_senha" placeholder="Confirme a sua senha!" required>
-        <div class="VerificarSenha"></div>
-        <div class="invalid-feedback">
-          Confirme a senha.
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="aceiteTermos" required>
-          <label class="form-check-label" for="aceiteTermos">
-            Li e aceito os <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalTermos">termos de uso</a>
-          </label>
-          <div class="invalid-feedback">
-            Você precisa aceitar os termos de uso para se cadastrar.
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <button class="btn btn-primary" type="submit" id="bcad">Cadastrar</button>
-      </div>
-
-      <p class="mt-5 mb-3 text-body-secondary">&copy; 2026 EnsinoTec - Todos os direitos reservados</p>
-    </form>
-
-    <!-- Modal Termos de Uso -->
-    <div class="modal fade" id="modalTermos" tabindex="-1" aria-labelledby="modalTermosLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalTermosLabel">Termos de Uso</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-          </div>
-          <div class="modal-body">
-            <p><strong>1. Aceitação dos Termos</strong><br>
-            Ao acessar e utilizar esta plataforma de nivelamento de matemática, o usuário concorda com os presentes Termos de Uso e com todas as condições aqui estabelecidas. Caso não concorde com algum termo, recomenda-se não utilizar o sistema.</p>
-
-            <p><strong>2. Objetivo da Plataforma</strong><br>
-            A plataforma tem como finalidade auxiliar estudantes no aprendizado e nivelamento de conteúdos matemáticos, oferecendo materiais educativos, exercícios, avaliações e recursos de apoio ao estudo.</p>
-
-            <p><strong>3. Cadastro Obrigatório</strong><br>
-            Para utilizar a plataforma e acessar suas funcionalidades, é obrigatório realizar um cadastro com informações verdadeiras, completas e atualizadas.<br>
-            O usuário é responsável por:</p>
-            <ul>
-              <li>Manter a confidencialidade de sua conta e senha;</li>
-              <li>Garantir a veracidade das informações fornecidas;</li>
-              <li>Não compartilhar sua conta com terceiros;</li>
-              <li>Informar imediatamente qualquer uso não autorizado de sua conta.</li>
-            </ul>
-            <p>Sem o cadastro, não será possível acessar os recursos, atividades e conteúdos disponíveis na plataforma.</p>
-
-            <p><strong>4. Uso Adequado da Plataforma</strong><br>
-            O usuário compromete-se a utilizar a plataforma de forma ética e responsável, sendo proibido:</p>
-            <ul>
-              <li>Compartilhar conteúdos ofensivos, ilegais ou inadequados;</li>
-              <li>Tentar acessar áreas restritas do sistema sem autorização;</li>
-              <li>Utilizar a plataforma para prejudicar outros usuários;</li>
-              <li>Copiar, modificar ou distribuir conteúdo sem autorização.</li>
-            </ul>
-
-            <p><strong>5. Propriedade Intelectual</strong><br>
-            Todos os conteúdos presentes na plataforma, incluindo textos, imagens, atividades, logotipos e materiais didáticos, são protegidos por direitos autorais e pertencem aos desenvolvedores do projeto ou aos respectivos autores.</p>
-
-            <p><strong>6. Privacidade e Dados</strong><br>
-            As informações fornecidas pelos usuários serão utilizadas apenas para fins acadêmicos e de funcionamento da plataforma, respeitando a legislação vigente de proteção de dados.</p>
-
-            <p><strong>7. Limitação de Responsabilidade</strong><br>
-            A plataforma busca oferecer conteúdos corretos e atualizados, porém não garante ausência total de erros ou interrupções no sistema.<br>
-            Os desenvolvedores não se responsabilizam por:</p>
-            <ul>
-              <li>Problemas causados por mau uso da plataforma;</li>
-              <li>Falhas de conexão com a internet;</li>
-              <li>Perda de dados ocasionada por fatores externos.</li>
-            </ul>
-
-            <p><strong>8. Alterações nos Termos</strong><br>
-            Os presentes Termos de Uso poderão ser modificados a qualquer momento para melhoria da plataforma. Recomenda-se que o usuário consulte esta página periodicamente.</p>
-
-            <p><strong>9. Encerramento de Conta</strong><br>
-            A administração poderá suspender ou encerrar contas que violem estes Termos de Uso ou pratiquem atividades prejudiciais ao funcionamento da plataforma.</p>
-
-            <p><strong>10. Contato</strong><br>
-            Em caso de dúvidas, sugestões ou problemas relacionados à plataforma, o usuário poderá entrar em contato com a equipe responsável pelo projeto.<br>
-            E-mail para contato: etecbebedouroinfo@gmail.com</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Fim Modal Termos de Uso -->
-
-    <button id="toggleTheme" class="floating-theme-btn">
-      <i class="bi bi-moon-stars-fill"></i>
-    </button>
-    <!-- Fluid theme -->
-
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const button = document.getElementById('toggleTheme');
-        const html = document.documentElement;
-        const icon = button.querySelector('i');
-
-        function applyTheme(theme) {
-          html.setAttribute('data-bs-theme', theme);
-
-          icon.className = theme === 'dark' ?
-            'bi bi-sun-fill' :
-            'bi bi-moon-stars-fill';
-        }
-
-        // Carregar tema salvo
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        applyTheme(savedTheme);
-
-        // Clique
-        button.addEventListener('click', function () {
-          const currentTheme = html.getAttribute('data-bs-theme');
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-          localStorage.setItem('theme', newTheme);
-          applyTheme(newTheme);
-        });
-      });
-    </script>
-    <!-- Fim fluid theme -->
-
-    <!-- Script erro -->
-
-    <script>
-      (() => {
-        'use strict';
-
-        const forms = document.querySelectorAll('.needs-validation');
-
-        Array.from(forms).forEach(form => {
-          form.addEventListener('submit', event => {
-            const senha = document.getElementById('senha').value;
-            const confirmarSenha = document.getElementById('confirmar_senha').value;
-
-            if (!form.checkValidity() || senha !== confirmarSenha) {
-              event.preventDefault();
-              event.stopPropagation();
-
-              if (senha !== confirmarSenha) {
-                document.getElementById('confirmar_senha').setCustomValidity('As senhas não coincidem.');
-              } else {
-                document.getElementById('confirmar_senha').setCustomValidity('');
-              }
-            } else {
-              document.getElementById('confirmar_senha').setCustomValidity('');
-            }
-
-            form.classList.add('was-validated');
-          }, false);
-        });
-      })();
-    </script>
-    <script>
-      const senha = document.getElementById('senha');
-      const confirmarSenha = document.getElementById('confirmar_senha');
-
-      confirmarSenha.addEventListener('input', () => {
-
-        if (senha.value !== confirmarSenha.value) {
-          confirmarSenha.setCustomValidity('As senhas não coincidem');
-        } else {
-          confirmarSenha.setCustomValidity('');
-        }
-        const formulario = document.getElementById('bcad');
-
-      });
-    </script>
-
-    <!-- Fim Script eroo -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-  </div>
+<body class="login-page register-page">
+    <header class="login-header">
+        <a class="login-brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
+        <a class="back-link" href="index.php">← Voltar ao início</a>
+    </header>
+    <main class="login-main">
+        <section class="login-card register-card" aria-labelledby="register-title">
+            <h1 id="register-title">Crie sua conta</h1>
+            <p class="login-subtitle">Junte-se ao EnsinoTec e comece sua<br class="desktop-break"> jornada de aprendizagem.</p>
+            <?php if ($erros): ?>
+            <div class="login-alert" role="alert"><ul>
+                <?php foreach ($erros as $erro): ?>
+                <li><?= site_escape($erro) ?></li>
+                <?php endforeach; ?>
+            </ul></div>
+            <?php endif; ?>
+            <form action="cadastro.php" method="post">
+                <div class="field">
+                    <label for="nome">Nome completo</label>
+                    <input id="nome" name="nome" type="text" placeholder="Ex.: Maria Silva" autocomplete="name" maxlength="150" value="<?= site_escape($nome) ?>" required>
+                </div>
+                <div class="field">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" maxlength="254" value="<?= site_escape($email) ?>" required>
+                </div>
+                <div class="password-grid">
+                    <div class="field">
+                        <label for="senha">Senha</label>
+                        <input id="senha" name="senha" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" minlength="6" aria-describedby="password-hint" required>
+                    </div>
+                    <div class="field">
+                        <label for="confirmar_senha">Confirmar senha</label>
+                        <input id="confirmar_senha" name="confirmar_senha" type="password" placeholder="Repita sua senha" autocomplete="new-password" minlength="6" aria-describedby="password-error" required>
+                    </div>
+                </div>
+                <div class="password-options">
+                    <p id="password-hint">Use pelo menos 6 caracteres.</p>
+                    <button type="button" class="show-passwords" aria-pressed="false" aria-controls="senha confirmar_senha" hidden>Mostrar senhas</button>
+                </div>
+                <p id="password-error" class="field-error" aria-live="polite"></p>
+                <div class="terms-choice">
+                    <input type="checkbox" id="aceite_termos" name="aceite_termos" value="1" <?= $aceite ? 'checked' : '' ?> required>
+                    <label for="aceite_termos">Li e aceito os termos de uso do EnsinoTec.</label>
+                </div>
+                <details class="terms-details">
+                    <summary>Ler termos de uso</summary>
+                    <div class="terms-content"><?php require __DIR__ . '/includes/site/termos.php'; ?></div>
+                </details>
+                <button class="login-submit" type="submit">Criar conta <span aria-hidden="true">→</span></button>
+            </form>
+            <p class="signup-link">Já possui uma conta? <a href="login.php">Fazer login</a></p>
+        </section>
+    </main>
+    <footer class="login-footer">© 2026 EnsinoTec — Todos os direitos reservados</footer>
 </body>
-
 </html>
