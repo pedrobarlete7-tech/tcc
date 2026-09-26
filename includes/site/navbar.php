@@ -1,8 +1,7 @@
-<!-- ALTERADO: nome do site padronizado para EnsinoTec. -->
 <header class="site-header">
     <nav class="site-container navigation" aria-label="Navegação principal">
         <a class="brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navigation-links" hidden>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Abrir menu" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
             <span>Menu</span>
         </button>
@@ -47,4 +46,14 @@
             </li>
         </ul>
     </nav>
+    <!-- ALTERADO: drawer mobile reutiliza os mesmos links da navbar. -->
+    <dialog class="mobile-drawer" id="mobile-drawer" aria-label="Menu EnsinoTec">
+        <div class="drawer-heading">
+            <span class="brand">EnsinoTec</span>
+            <button class="drawer-close" type="button" aria-label="Fechar menu">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
+        <nav class="drawer-content" aria-label="Navegação mobile"></nav>
+    </dialog>
 </header>
