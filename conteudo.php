@@ -2,21 +2,21 @@
 require_once __DIR__ . '/includes/site/init.php';
 require_once __DIR__ . '/includes/conteudo/dados.php';
 
-// ALTERADO: valida o conteúdo e recarrega os dados a cada acesso.
+// ALTERADO: exibe a página 404 quando o conteúdo solicitado não existe.
 header('Cache-Control: no-store');
 $idConteudo = filter_input(INPUT_GET, 'id_conteudo', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $conteudo = null;
 $erroConteudo = '';
 if (!$idConteudo) {
-    http_response_code(400);
-    $erroConteudo = 'Selecione um conteúdo válido para continuar.';
+    require __DIR__ . '/404.php';
+    exit;
 } else {
     require_once __DIR__ . '/actions/conexao.php';
     try {
         $conteudo = carregar_conteudo($pdo, $idConteudo);
         if (!$conteudo) {
-            http_response_code(404);
-            $erroConteudo = 'Este conteúdo não foi encontrado.';
+            require __DIR__ . '/404.php';
+            exit;
         }
     } catch (PDOException $erro) {
         http_response_code(503);
@@ -43,7 +43,6 @@ require __DIR__ . '/includes/site/header.php';
             <?php endif; ?>
         <?php endforeach; ?>
     </div>
-    <!-- ALTERADO: exibe todos os resumos e suas imagens, mantendo a seção original. -->
     <?php foreach ($conteudo['resumos'] as $resumo): ?>
         <?php if (!empty($resumo['caminho_imagem'])): $urlImagem = url_midia($resumo['caminho_imagem']); ?>
         <div class="imagem">
@@ -79,7 +78,6 @@ require __DIR__ . '/includes/site/header.php';
         <?php foreach ($conteudo['exercicios'] as $exercicio): ?>
         <div class="questao">
             <p><strong><?= nl2br(site_escape($exercicio['pergunta'])) ?></strong></p>
-            <!-- ALTERADO: inclui as imagens cadastradas para esta questão. -->
             <?php foreach ($exercicio['imagens'] as $imagem): $urlImagem = url_midia($imagem['caminho_arquivo']); ?>
             <figure class="imagem-questao">
                 <?php if ($urlImagem !== null): ?>
