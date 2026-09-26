@@ -1,0 +1,40 @@
+/* ALTERADO: conteúdo ampliado e distribuído na tela, com adaptação para celular. */
+.pagina-contato {
+    flex: 1;
+    width: min(100% - 4rem, 1200px);
+    margin-inline: auto;
+    padding-block: clamp(40px, 5vh, 72px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 76px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    line-height: 1.5;
+}
+.pagina-contato * { box-sizing: border-box; }
+.pagina-contato .contato { width: 100%; }
+.pagina-contato .formulario { width: 100%; max-width: 900px; margin-inline: auto; text-align: center; }
+.pagina-contato h1 { margin: 0 0 16px; color: #780000; font-size: clamp(2rem, 3vw, 3rem); font-weight: 800; line-height: 1.2; }
+.pagina-contato .subtitulo { margin: 0 0 36px; color: #454545; font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.6; }
+.pagina-contato .campos { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.pagina-contato .campo { min-width: 0; text-align: left; }
+.pagina-contato .campo label { display: block; margin-bottom: 10px; font-size: 1rem; font-weight: 600; color: #333; }
+.pagina-contato .campo input { width: 100%; min-height: 54px; border: 1px solid #dedede; border-radius: 14px; padding: 14px 18px; background: #f2f2f2; color: #222; font: inherit; }
+.pagina-contato .campo input::placeholder { color: #686868; opacity: 1; }
+.pagina-contato .campo input:focus-visible { outline: 3px solid #780000; outline-offset: 3px; }
+.pagina-contato form button { width: 100%; min-height: 54px; margin-top: 26px; padding: 14px 24px; border: 0; border-radius: 14px; background: #780000; color: #fff; font-size: 1rem; font-weight: 700; letter-spacing: .08em; cursor: pointer; }
+.pagina-contato form button:hover { background: #940000; }
+.pagina-contato .informacoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; width: 100%; padding: 0 20px 28px; background: #f0f0f0; border-radius: 18px; }
+.pagina-contato .info { position: relative; min-width: 0; padding: 68px 20px 10px; text-align: center; }
+.pagina-contato .info h2 { margin: 0 0 14px; color: #222; font-size: 1.125rem; font-weight: 700; line-height: 1.4; }
+.pagina-contato .info p { margin: 0; color: #444; font-size: 1rem; line-height: 1.8; overflow-wrap: anywhere; }
+.pagina-contato .icone { position: absolute; top: -36px; left: 50%; transform: translateX(-50%); width: 84px; height: 84px; border-radius: 50%; background: #780000; display: flex; align-items: center; justify-content: center; }
+.pagina-contato .icone svg { width: 46px; height: 46px; fill: currentColor; stroke: none; }
+@media (max-width: 700px) {
+    .pagina-contato { width: calc(100% - 2rem); padding-block: 36px; gap: 70px; }
+    .pagina-contato .campos { grid-template-columns: 1fr; gap: 20px; }
+    .pagina-contato .subtitulo br { display: none; }
+    .pagina-contato .informacoes { grid-template-columns: 1fr; padding: 0 20px 24px; gap: 62px; }
+    .pagina-contato .info { padding-inline: 0; }
+}
