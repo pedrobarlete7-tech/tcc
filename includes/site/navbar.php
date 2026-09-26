@@ -1,6 +1,7 @@
+<!-- ALTERADO: nome do site padronizado para EnsinoTec. -->
 <header class="site-header">
     <nav class="site-container navigation" aria-label="Navegação principal">
-        <a class="brand" href="index.php" aria-label="NIVELAR — início">NIVELAR</a>
+        <a class="brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navigation-links" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
             <span>Menu</span>
@@ -9,13 +10,13 @@
             <li>
                 <details class="dropdown">
                     <summary>Matérias <span class="chevron" aria-hidden="true"></span></summary>
-                    <!-- ALTERADO: painel mais largo, com disciplinas e conteúdos separados. -->
+                    
                     <div class="dropdown-panel subjects-panel">
                         <div class="subjects-heading">
                             <strong>Explore as disciplinas</strong>
                             <span>Escolha uma disciplina para ver seus conteúdos.</span>
                         </div>
-                        <!-- ALTERADO: lista preenchida pelo JavaScript enviado. -->
+                        
                         <ul class="subjects-list" id="navbar-materias">
                             <li class="subjects-message">Carregando disciplinas…</li>
                         </ul>
