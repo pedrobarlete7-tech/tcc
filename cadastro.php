@@ -22,12 +22,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- ALTERADO: usa a aparência salva nas configurações. -->
+    <script src="assets/js/tema.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#100c0e">
     <title>Crie sua conta — EnsinoTec</title>
     <link rel="stylesheet" href="assets/css/login.css">
     <link rel="stylesheet" href="assets/css/cadastro.css">
     <script src="assets/js/cadastro.js" defer></script>
+    <link rel="stylesheet" href="assets/css/tema.css">
 </head>
 <body class="login-page register-page">
     <header class="login-header">
