@@ -1,0 +1,2 @@
+# NOVO: página 404 no XAMPP; ajuste /Novo/ se a pasta pública mudar no servidor.
+ErrorDocument 404 /Novo/404.php
