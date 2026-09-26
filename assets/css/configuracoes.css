@@ -1,0 +1,609 @@
+/* ALTERADO: estilos centrais isolados para não modificar a navbar e o footer. */
+.pagina-configuracoes { flex: 1; background: #f5f7fb; color: #1f2937; font-family: Arial, Helvetica, sans-serif; }
+.pagina-configuracoes *, .pagina-configuracoes *::before, .pagina-configuracoes *::after { box-sizing: border-box; }
+.pagina-configuracoes .main { width: min(100%, 1100px); margin: 0 auto; padding: 30px 40px 50px; }
+.pagina-configuracoes a { color: inherit; }
+.pagina-configuracoes h1, .pagina-configuracoes h2, .pagina-configuracoes h3, .pagina-configuracoes p { margin-top: 0; }
+.pagina-configuracoes .main {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 30px 40px 50px;
+}
+
+
+
+
+.pagina-configuracoes .back-button {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 8px;
+
+    color: #64748b;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    margin-bottom: 30px;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .back-button:hover {
+    color: #780000;
+}
+
+.pagina-configuracoes .back-button i {
+    font-size: 15px;
+}
+
+
+
+
+.pagina-configuracoes .header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.pagina-configuracoes .header h1 {
+    font-size: 30px;
+
+    margin-bottom: 7px;
+}
+
+.pagina-configuracoes .header p {
+    color: #8a94a6;
+
+    font-size: 14px;
+}
+
+
+
+
+.pagina-configuracoes .user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+.pagina-configuracoes .notification {
+    position: relative;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 50%;
+
+    background: white;
+
+    color: #64748b;
+}
+
+.pagina-configuracoes .notification span {
+    position: absolute;
+
+    top: -3px;
+    right: -3px;
+
+    width: 17px;
+    height: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ef4444;
+
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 10px;
+}
+
+.pagina-configuracoes .user-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.pagina-configuracoes .user-info small {
+    display: block;
+
+    color: #9ca3af;
+
+    margin-top: 3px;
+}
+
+.pagina-configuracoes .avatar {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f9e6e6;
+
+    color: #780000;
+
+    font-weight: bold;
+}
+
+
+
+
+.pagina-configuracoes .settings {
+    width: 100%;
+}
+
+
+
+
+.pagina-configuracoes .card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+
+
+
+.pagina-configuracoes .card-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+.pagina-configuracoes .card-title h2 {
+    font-size: 17px;
+}
+
+.pagina-configuracoes .card-title p {
+    color: #9ca3af;
+
+    font-size: 13px;
+
+    margin-top: 4px;
+}
+
+
+
+
+.pagina-configuracoes .title-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+}
+
+
+
+
+.pagina-configuracoes .blue {
+    background: #f9e6e6;
+    color: #780000;
+}
+
+
+
+
+.pagina-configuracoes .orange {
+    background: #fff7ed;
+    color: #f97316;
+}
+
+
+
+
+.pagina-configuracoes .green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+
+
+
+.pagina-configuracoes .purple {
+    background: #f5f3ff;
+    color: #8b5cf6;
+}
+
+
+
+
+.pagina-configuracoes .profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.pagina-configuracoes .big-avatar {
+    width: 75px;
+    height: 75px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f9e6e6;
+
+    color: #780000;
+
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+.pagina-configuracoes .profile-info {
+    flex: 1;
+}
+
+.pagina-configuracoes .profile-info h3 {
+    margin-bottom: 8px;
+}
+
+.pagina-configuracoes .profile-info p {
+    color: #8a94a6;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+}
+
+.pagina-configuracoes .profile-info i {
+    margin-right: 6px;
+}
+
+
+
+
+.pagina-configuracoes .btn {
+    padding: 10px 15px;
+
+    border: 1px solid #dbe1ea;
+
+    background: white;
+
+    border-radius: 8px;
+
+    color: #475569;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .btn:hover {
+    background: #f9e6e6;
+
+    color: #780000;
+
+    border-color: #780000;
+}
+
+
+
+
+.pagina-configuracoes .option,
+.pagina-configuracoes .security-option {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 17px 0;
+
+    border-top: 1px solid #f0f0f0;
+}
+
+.pagina-configuracoes .option strong,
+.pagina-configuracoes .security-option strong {
+    font-size: 14px;
+}
+
+.pagina-configuracoes .option p,
+.pagina-configuracoes .security-option p {
+    color: #9ca3af;
+
+    font-size: 12px;
+
+    margin-top: 5px;
+}
+
+
+
+
+.pagina-configuracoes .switch {
+    position: relative;
+
+    width: 45px;
+    height: 24px;
+}
+
+.pagina-configuracoes .switch input {
+    display: none;
+}
+
+.pagina-configuracoes .switch span {
+    position: absolute;
+
+    inset: 0;
+
+    background: #d1d5db;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.pagina-configuracoes .switch span::before {
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+    height: 18px;
+
+    left: 3px;
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: 0.3s;
+}
+
+.pagina-configuracoes .switch input:checked + span {
+    background: #780000;
+}
+
+.pagina-configuracoes .switch input:checked + span::before {
+    transform: translateX(21px);
+}
+
+
+
+
+.pagina-configuracoes .arrow {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .arrow:hover {
+    background: #f9e6e6;
+
+    color: #780000;
+}
+
+
+
+
+.pagina-configuracoes .theme {
+    display: flex;
+
+    gap: 15px;
+}
+
+.pagina-configuracoes .theme-option {
+    flex: 1;
+
+    padding: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .theme-option i {
+    display: block;
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+}
+
+.pagina-configuracoes .theme-option:hover {
+    border-color: #780000;
+
+    color: #780000;
+}
+
+.theme-option.selected {
+    border: 2px solid #780000;
+
+    background: #f9e6e6;
+
+    color: #780000;
+}
+
+
+
+
+.pagina-configuracoes .actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.pagina-configuracoes .cancel,
+.pagina-configuracoes .save {
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.pagina-configuracoes .cancel {
+    background: white;
+
+    border: 1px solid #dbe1ea;
+
+    color: #64748b;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .cancel:hover {
+    border-color: #780000;
+
+    color: #780000;
+
+    background: #f9e6e6;
+}
+
+.pagina-configuracoes .save {
+    background: #780000;
+
+    border: none;
+
+    color: white;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+.pagina-configuracoes .save:hover {
+    background: #5f0000;
+}
+
+
+
+
+@media (max-width: 700px) {
+
+    .pagina-configuracoes .main {
+        padding: 20px;
+    }
+
+    .pagina-configuracoes .header {
+        align-items: flex-start;
+    }
+
+    .pagina-configuracoes .notification {
+        display: none;
+    }
+
+    .pagina-configuracoes .user-info {
+        display: none;
+    }
+
+    .pagina-configuracoes .profile {
+        flex-wrap: wrap;
+    }
+
+    .pagina-configuracoes .profile .btn {
+        width: 100%;
+    }
+
+    .pagina-configuracoes .theme {
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .pagina-configuracoes .main {
+        padding: 18px 15px;
+    }
+
+    .pagina-configuracoes .header h1 {
+        font-size: 24px;
+    }
+
+    .pagina-configuracoes .header p {
+        font-size: 13px;
+    }
+
+    .pagina-configuracoes .card {
+        padding: 18px;
+    }
+
+    .pagina-configuracoes .actions {
+        flex-direction: column;
+    }
+
+    .pagina-configuracoes .cancel,
+    .pagina-configuracoes .save {
+        width: 100%;
+    }
+}
