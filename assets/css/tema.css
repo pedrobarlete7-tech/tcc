@@ -1,0 +1,35 @@
+/* NOVO: o tema claro mantém os estilos atuais; o escuro preserva os destaques vermelhos. */
+.pagina-configuracoes button.theme-option { font: inherit; background: transparent; }
+.pagina-configuracoes button.theme-option.selected { border: 2px solid #780000; background: #f9e6e6; color: #780000; }
+.pagina-configuracoes .theme-status { margin: 16px 0 0; font-size: .875rem; line-height: 1.5; }
+.pagina-configuracoes .theme-status:empty { display: none; }
+.pagina-configuracoes .settings-icon { display: inline-block; width: 1em; height: 1em; vertical-align: -.125em; }
+.pagina-configuracoes .theme-option .settings-icon { display: block; width: 20px; height: 20px; margin: 0 auto 8px; }
+[data-theme-choice]:focus-visible { outline: 3px solid #a90000; outline-offset: 4px; }
+html[data-theme="dark"] { color-scheme: dark; --wine: #ff9696; --text: #f5eeee; --muted: #bfb1bb; --border: #49363f; --soft: #33252c; --night: #171216; --surface: #231b21; --accent-bg: #47232c; color: var(--text); background: var(--night); }
+html[data-theme="dark"] body,
+html[data-theme="dark"] .pagina-configuracoes { background: var(--night); color: var(--text); }
+html[data-theme="dark"] :is(.site-header,.site-footer,.dropdown-panel,.subjects-panel,.mobile-drawer,.nav-toggle,.skip-link) { background: var(--surface); color: var(--text); border-color: var(--border); }
+html[data-theme="dark"] .site-header { box-shadow: 0 4px 16px #0006; }
+html[data-theme="dark"] :is(.drawer-close,.subjects-heading,.subject-group>summary,.subject-count,.content-pending small) { background: var(--soft); color: var(--text); border-color: var(--border); }
+html[data-theme="dark"] :is(.subject-group[open]>summary,.subject-group>summary:hover,.subject-group a:hover) { background: var(--accent-bg); color: var(--wine); }
+html[data-theme="dark"] :is(.subject-group[open],.topic-group>ul) { border-color: var(--border); }
+html[data-theme="dark"] :is(.subjects-heading strong,.home h1,.sobre h1,.sobre h2,.pagina-contato h1,.conteudo a,.content-arrow,.btn-voltar) { color: var(--wine); }
+html[data-theme="dark"] :is(.subjects-heading>span,.content-pending,.conteudo figcaption,.conteudo .midia-indisponivel) { color: var(--muted); }
+html[data-theme="dark"] :is(.navigation-links .sign-in,.pagina-configuracoes .save,.pagina-contato form button,.btn-projeto,.sup .btn) { background: #a51d35; color: #fff; }
+html[data-theme="dark"] :is(.navigation-links .sign-in:hover,.pagina-configuracoes .save:hover,.pagina-contato form button:hover,.btn-projeto:hover) { background: #be2943; }
+html[data-theme="dark"] :is(.sobre,.pagina-contato,.pagina-contato .info h2,.pagina-contato .campo label) { color: var(--text); }
+html[data-theme="dark"] :is(.sobre .proposito,.sobre .historia,.sobre .escola,.sobre .equipe,.sobre .membro,.sobre .porque,.pagina-contato .informacoes,.conteudo .questao,.pagina-configuracoes .card,.sup,.pagina-perfil .container) { background: var(--surface); border-color: var(--border); }
+html[data-theme="dark"] :is(.video-exemplo,.historia_video,.sobre .foto) { background: var(--soft); color: var(--muted); }
+html[data-theme="dark"] .conteudo .resumo { background: var(--accent-bg); border-color: var(--wine); }
+html[data-theme="dark"] :is(.pagina-contato .subtitulo,.pagina-contato .info p,.pagina-configuracoes p,.pagina-configuracoes small,.pagina-configuracoes .back-button,.pagina-perfil .label) { color: var(--muted); }
+html[data-theme="dark"] :is(.pagina-contato .campo input,.sup input,.pagina-perfil .campo p) { background: var(--soft); color: var(--text); border-color: var(--border); }
+html[data-theme="dark"] input::placeholder { color: var(--muted); }
+html[data-theme="dark"] .pagina-configuracoes :is(.notification,.btn,.cancel,.arrow,.theme-option) { background: var(--surface); color: var(--text); border-color: var(--border); }
+html[data-theme="dark"] .pagina-configuracoes :is(.option,.security-option) { border-color: var(--border); }
+html[data-theme="dark"] .pagina-configuracoes :is(.avatar,.big-avatar,.blue,.theme-option.selected,.theme-option:hover,.btn:hover,.cancel:hover,.arrow:hover) { background: var(--accent-bg); color: var(--wine); border-color: var(--wine); }
+html[data-theme="dark"] .pagina-configuracoes .switch input:checked+span { background: #b92b42; }
+html[data-theme="dark"] :focus-visible { outline-color: var(--wine); }
+html[data-theme="dark"] .pagina-contato .icone { background: #a51d35; color: #fff; }
+html[data-theme="dark"] :is(.pagina-perfil .informacoes h1,.sup label) { color: var(--text); }
+html[data-theme="dark"] .login-page { background: radial-gradient(ellipse at top, #471522, #120e12 75%); }
