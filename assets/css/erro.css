@@ -1,0 +1,15 @@
+/* NOVO: erro 404 responsivo, com as cores do tema ativo. */
+.pagina-erro { flex: 1; display: grid; place-items: center; padding-block: clamp(48px, 8vw, 110px); }
+.erro-card { width: min(100%, 720px); text-align: center; padding: clamp(24px, 5vw, 56px); border: 1px solid var(--border); border-radius: 24px; background: var(--surface, #fff); box-shadow: 0 12px 40px rgb(0 0 0 / 6%); }
+.erro-codigo { margin: 0 0 12px; color: var(--wine); font-weight: 800; font-size: clamp(5rem, 16vw, 9rem); line-height: 1; letter-spacing: -.05em; }
+.erro-card h1 { margin: 0 0 20px; font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.2; }
+.erro-descricao { margin: 0 auto; max-width: 520px; color: var(--muted); line-height: 1.8; }
+.erro-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 30px; }
+.erro-acoes a { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 12px 22px; border-radius: 12px; font-weight: 700; }
+.erro-inicio { background: #940000; color: #fff; }
+.erro-inicio:hover { background: #710000; }
+.erro-contato { border: 1px solid var(--border); color: var(--wine); }
+.erro-contato:hover { background: var(--soft); }
+html[data-theme="dark"] .erro-inicio { background: #a51d35; }
+html[data-theme="dark"] .erro-inicio:hover { background: #be2943; }
+@media (max-width: 420px) { .erro-acoes { flex-direction: column; } }
