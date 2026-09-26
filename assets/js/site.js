@@ -1,44 +1,73 @@
 (() => {
     const toggle = document.querySelector('.nav-toggle');
     const links = document.querySelector('#navigation-links');
+    const drawer = document.querySelector('#mobile-drawer');
+    const close = drawer?.querySelector('.drawer-close');
+    const content = drawer?.querySelector('.drawer-content');
+    if (!toggle || !links || !drawer || !close || !content) return;
+    const originalParent = links.parentElement;
     const desktop = window.matchMedia('(min-width: 48rem)');
-    const dropdowns = [...document.querySelectorAll('.dropdown')];
-    if (!toggle || !links) return;
+    const dropdowns = [...links.querySelectorAll('.dropdown')];
+    let savedOverflow = '';
+    let locked = false;
     toggle.hidden = false;
-    const closeDropdowns = () => dropdowns.forEach(item => { item.open = false; });
-    const syncNavigation = () => {
-        links.hidden = !desktop.matches;
+
+    // ALTERADO: move os mesmos links para o drawer, sem duplicar menus ou IDs.
+    function closeDrawer() {
+        if (drawer.open) drawer.close();
+        if (locked) document.body.style.overflow = savedOverflow;
+        locked = false;
         toggle.setAttribute('aria-expanded', 'false');
-        closeDropdowns();
-    };
-    syncNavigation();
-    desktop.addEventListener('change', syncNavigation);
+    }
+    function sync() {
+        closeDrawer();
+        (desktop.matches ? originalParent : content).append(links);
+        dropdowns.forEach(item => { item.open = false; });
+        if (desktop.matches && document.activeElement === toggle) originalParent.querySelector('.brand').focus();
+    }
+    sync();
+    desktop.addEventListener('change', sync);
     toggle.addEventListener('click', () => {
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', String(!expanded));
-        links.hidden = expanded;
-        if (expanded) closeDropdowns();
+        if (desktop.matches) return;
+        savedOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        locked = true;
+        drawer.showModal();
+        toggle.setAttribute('aria-expanded', 'true');
+        close.focus();
     });
-    dropdowns.forEach(item => {
-        item.addEventListener('toggle', () => {
-            if (item.open) dropdowns.forEach(other => { if (other !== item) other.open = false; });
-        });
+    close.addEventListener('click', closeDrawer);
+    drawer.addEventListener('close', () => {
+        if (locked) document.body.style.overflow = savedOverflow;
+        locked = false;
+        toggle.setAttribute('aria-expanded', 'false');
     });
+    drawer.addEventListener('cancel', event => {
+        event.preventDefault();
+        closeDrawer();
+    });
+    // ALTERADO: clique no fundo escuro fecha o painel; diálogo controla foco e Escape.
+    drawer.addEventListener('click', event => {
+        const rect = drawer.getBoundingClientRect();
+        if (event.target === drawer && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeDrawer();
+    });
+    links.addEventListener('click', event => {
+        if (event.target.closest('a') && drawer.open) closeDrawer();
+    });
+    dropdowns.forEach(item => item.addEventListener('toggle', () => {
+        if (item.open) dropdowns.forEach(other => { if (other !== item) other.open = false; });
+    }));
     document.addEventListener('click', event => {
+        if (drawer.open) return;
         dropdowns.forEach(item => { if (!item.contains(event.target)) item.open = false; });
     });
     document.addEventListener('keydown', event => {
-        if (event.key !== 'Escape') return;
+        if (event.key !== 'Escape' || drawer.open) return;
         const open = dropdowns.find(item => item.open);
-        if (open) {
-            open.open = false;
-            open.querySelector('summary').focus();
-        } else if (!desktop.matches && !links.hidden) {
-            syncNavigation();
-            toggle.focus();
-        }
+        if (open) { open.open = false; open.querySelector('summary').focus(); }
     });
     document.addEventListener('focusin', event => {
+        if (drawer.open) return;
         dropdowns.forEach(item => { if (!item.contains(event.target)) item.open = false; });
     });
 })();
