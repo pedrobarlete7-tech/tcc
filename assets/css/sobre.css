@@ -1,0 +1,251 @@
+body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #ffffff;
+        min-height: 100vh;
+    }
+
+.sobre{
+
+    max-width:1200px;
+    margin:70px auto;
+    padding:20px;
+
+}
+
+.titulo{
+
+    text-align:center;
+    margin-bottom:50px;
+    font-size:45px;
+    color:#780000;
+    font-weight:bold;
+
+}
+
+.proposito{
+
+    border-radius:15px;
+    padding:35px;
+    margin-bottom:35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+
+}
+
+.proposito h2{
+
+    color:#780000;
+    margin-bottom:20px;
+
+}
+
+.proposito p{
+
+    text-align:justify;
+    line-height:1.8;
+    font-size:18px;
+
+}
+
+
+
+.historia{
+
+    display:flex;
+    gap:40px;
+    align-items:center;
+    padding: 35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+    border-radius:15px;
+    border-radius:15px;
+    margin-bottom: 35px;
+
+}
+
+.historia h2{
+    color: #780000;
+} 
+
+.historia p{
+
+    text-align:justify;
+    line-height:1.8;
+    font-size:18px;
+    width: 500px;
+
+}
+
+.historia-texto{
+
+    flex:1;
+
+}
+
+.historia_video{
+
+    flex:1;
+    height:320px;
+    width: 1000px;
+    background:#dcdcdc;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    font-weight:bold;
+    color:#666;
+
+}
+
+.escola{
+    padding: 35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+    border-radius:15px;
+    margin-bottom: 35px;
+}
+
+.escola h2{
+    color: #780000;
+}
+
+.escola p{
+    text-align:justify;
+    line-height:1.8;
+    font-size:18px;
+}
+
+
+
+.equipe{
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+    margin-top:20px;
+    padding: 35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+    border-radius:15px;
+    margin-bottom:35px;
+
+}
+
+.membro{
+
+    text-align:center;
+    margin-top:20px;
+    padding: 35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+    border-radius:15px;
+    margin-bottom:35px;
+}
+
+.membro h2{
+    color: #780000;
+}
+
+.foto{
+
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    background:#d8d8d8;
+    margin:auto;
+    margin-bottom:15px;
+
+}
+
+
+
+.porque{
+
+    text-align:center;
+    margin-top:20px;
+    padding: 35px;
+    box-shadow:0px 5px 15px rgba(0,0,0,.12);
+    border-radius:15px;
+
+}
+
+.porque h2{
+    color: #780000;
+}
+
+.btn-projeto{
+
+    display:inline-block;
+    margin-top:20px;
+    background:#780000;
+    color:#fff;
+    padding:15px 35px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:18px;
+    transition:.3s;
+
+}
+
+.btn-projeto:hover{
+
+    background:#9b0000;
+
+}
+
+
+
+@media(max-width:900px){
+
+.historia{
+
+    flex-direction:column;
+
+}
+
+.equipe{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:600px){
+
+.equipe{
+
+    grid-template-columns:1fr;
+
+}
+
+.historia_video{
+
+    height:220px;
+
+}
+
+.titulo{
+
+    font-size:35px;
+
+}
+
+}
+/* ALTERADO: preserva a tipografia central antes fornecida pelo Bootstrap. */
+.sobre { line-height: 1.5; color: #212529; }
+.sobre h1, .sobre h2, .sobre h4 { margin-top: 0; line-height: 1.2; }
+.sobre h2 { font-size: calc(1.325rem + .9vw); font-weight: 500; margin-bottom: .5rem; }
+.sobre h4 { font-size: calc(1.275rem + .3vw); font-weight: 500; margin-bottom: .5rem; }
+.sobre p { margin-top: 0; margin-bottom: 1rem; }
+.sobre .proposito h2 { margin-bottom: 20px; }
+@media (min-width: 1200px) {
+    .sobre h2 { font-size: 2rem; }
+    .sobre h4 { font-size: 1.5rem; }
+}
+/* ALTERADO: ajuste autorizado para a seção de história caber no celular. */
+.sobre { width: min(100%, 1200px); }
+@media (max-width: 900px) {
+    .sobre .historia_texto,
+    .sobre .historia p,
+    .sobre .historia_video { width: 100%; min-width: 0; }
+    .sobre .historia_video { flex: none; }
+    .sobre .historia_video video { max-width: 100%; max-height: 100%; }
+}
