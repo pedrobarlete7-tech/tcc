@@ -63,6 +63,8 @@ h1 { margin: 0; font-size: clamp(1.35rem, 4vw, 1.6rem); text-align: center; line
 .remember-email { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; cursor: pointer; }
 .remember-email input { accent-color: #780000; width: 16px; height: 16px; margin: 0; }
 .password-help { flex: 1; min-width: 140px; }
+/* ALTERADO: mantém o link de recuperação alinhado à direita. */
+a.password-help { display: flex; align-items: center; justify-content: flex-end; min-height: 44px; margin-left: auto; text-align: right; text-decoration: underline; text-underline-offset: 3px; }
 .password-help summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: flex-end; text-decoration: underline; text-underline-offset: 3px; list-style: none; }
 .password-help summary::-webkit-details-marker { display: none; }
 .password-help p { line-height: 1.6; margin: 0 0 12px; }
