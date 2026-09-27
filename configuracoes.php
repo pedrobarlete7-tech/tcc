@@ -1,8 +1,52 @@
 <?php
-// ALTERADO: controles de aparência com prévia, salvar e cancelar.
+// ALTERADO: mostra os dados atuais da conta consultada no banco.
+require_once __DIR__ . '/includes/site/auth.php';
+header('Cache-Control: no-store');
+if (!$autenticado) {
+    header('Location: login.php', true, 303);
+    exit;
+}
+$perfilConta = $contaAtual;
+$nomePerfil = (string) $perfilConta['nome'];
+$emailPerfil = (string) $perfilConta['email'];
+$tipoPerfil = ['aluno' => 'Aluno', 'professor' => 'Professor', 'administrador' => 'Administrador'][$perfilConta['tipo_usuario']] ?? 'Usuário';
+$partesNome = preg_split('/\s+/u', trim($nomePerfil), -1, PREG_SPLIT_NO_EMPTY);
+$iniciaisPerfil = $partesNome ? mb_substr($partesNome[0], 0, 1, 'UTF-8') : '?';
+if (count($partesNome) > 1) $iniciaisPerfil .= mb_substr($partesNome[count($partesNome) - 1], 0, 1, 'UTF-8');
+$iniciaisPerfil = mb_strtoupper($iniciaisPerfil, 'UTF-8');
+$nomeUsuario = $nomePerfil;
+$erroExclusao = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$autenticado) {
+        header('Location: login.php', true, 303);
+        exit;
+    }
+    if (!auth_csrf_valido() || ($_POST['acao'] ?? '') !== 'excluir_conta' || ($_POST['confirmar_exclusao'] ?? '') !== 'sim') {
+        http_response_code(403);
+        $erroExclusao = 'Não foi possível confirmar a solicitação. Abra a confirmação e tente novamente.';
+    } else {
+        require __DIR__ . '/actions/conexao.php';
+        try {
+            $pdo->beginTransaction();
+            $excluir = $pdo->prepare('DELETE FROM usuario WHERE id_usuario = ?');
+            $excluir->execute([(int) $_SESSION['usuario']['id_usuario']]);
+            $pdo->commit();
+        } catch (PDOException $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            error_log('[EnsinoTec] Falha ao excluir conta. Código: ' . $e->getCode());
+            http_response_code(503);
+            $erroExclusao = 'Não foi possível excluir sua conta agora. Tente novamente mais tarde.';
+        }
+        if ($erroExclusao === '') {
+            require __DIR__ . '/sair.php';
+            exit;
+        }
+    }
+}
 $tituloPagina = 'Configurações — EnsinoTec';
 $estilosPagina = [
     'assets/css/configuracoes.css',
+    'assets/css/excluir-conta.css',
 ];
 require __DIR__ . '/includes/site/header.php';
 ?>
@@ -34,12 +78,12 @@ require __DIR__ . '/includes/site/header.php';
                 <div class="user-info">
 
                     <div class="avatar">
-                        JS
+                        <?= site_escape($iniciaisPerfil) ?>
                     </div>
 
                     <div>
-                        <strong>João Silva</strong>
-                        <small>Aluno</small>
+                        <strong><?= site_escape($nomePerfil) ?></strong>
+                        <small><?= site_escape($tipoPerfil) ?></small>
                     </div>
 
                 </div>
@@ -72,21 +116,21 @@ require __DIR__ . '/includes/site/header.php';
                 <div class="profile">
 
                     <div class="big-avatar">
-                        JS
+                        <?= site_escape($iniciaisPerfil) ?>
                     </div>
 
                     <div class="profile-info">
 
-                        <h3>João Silva</h3>
+                        <h3><?= site_escape($nomePerfil) ?></h3>
 
                         <p>
                             <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3zM3 5l9 8 9-8"/></svg>
-                            joao@email.com
+                            <?= site_escape($emailPerfil) ?>
                         </p>
 
                         <p>
                             <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3zM14 9h4m-4 4h4M6 9h4v6H6z"/></svg>
-                            Matrícula: 20260125
+                            ID da conta: <?= (int) $perfilConta['id_usuario'] ?> · <?= site_escape($tipoPerfil) ?>
                         </p>
 
                     </div>
@@ -189,9 +233,7 @@ require __DIR__ . '/includes/site/header.php';
                         <p>Atualize sua senha de acesso</p>
                     </div>
 
-                    <button class="arrow">
-                        <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-                    </button>
+                    <a class="arrow" href="recuperar-senha.php" aria-label="Recuperar ou alterar senha">→</a>
 
                 </div>
 
@@ -200,12 +242,10 @@ require __DIR__ . '/includes/site/header.php';
 
                     <div>
                         <strong>Autenticação em duas etapas</strong>
-                        <p>Adicione uma camada extra de segurança</p>
+                        <p><?= $autenticado ? (!empty($contaAtual["dois_fatores"]) ? "Ativada: código por e-mail." : "Desativada. Ative para pedir um código no login.") : "Entre na sua conta para configurar." ?></p>
                     </div>
 
-                    <button class="arrow">
-                        <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-                    </button>
+                    <a class="arrow" href="seguranca.php" aria-label="Configurar autenticação em duas etapas">→</a>
 
                 </div>
 
@@ -266,8 +306,34 @@ require __DIR__ . '/includes/site/header.php';
             </div>
 
         <p class="theme-status" id="theme-status" role="status" aria-live="polite"></p>
+        <section class="card conta-exclusao" aria-labelledby="excluir-titulo">
+            <h2 id="excluir-titulo">Excluir conta</h2>
+            <?php if ($erroExclusao !== ''): ?>
+            <p role="alert"><?= site_escape($erroExclusao) ?></p>
+            <?php endif; ?>
+            <?php if ($autenticado): ?>
+            <p>Ao excluir sua conta, você perderá o acesso e o progresso de aprendizagem vinculado a ela. Essa ação não pode ser desfeita.</p>
+            <button class="excluir-botao" type="button" id="abrir-exclusao" aria-haspopup="dialog" aria-controls="confirmar-exclusao" hidden>Excluir minha conta</button>
+            <noscript><p>Ative o JavaScript para abrir a confirmação de exclusão.</p></noscript>
+            <dialog id="confirmar-exclusao" class="excluir-dialog" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-descricao">
+                <h2 id="confirmar-titulo">Deseja mesmo excluir sua conta?</h2>
+                <p id="confirmar-descricao">A conta <strong><?= site_escape((string) $usuario['email']) ?></strong> será excluída permanentemente. Você será desconectado do EnsinoTec.</p>
+                <form action="configuracoes.php" method="post" id="form-exclusao">
+                    <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
+                    <input type="hidden" name="acao" value="excluir_conta">
+                    <div class="excluir-acoes">
+                        <button type="button" class="excluir-cancelar" id="cancelar-exclusao" autofocus>Não, cancelar</button>
+                        <button type="submit" class="excluir-botao" name="confirmar_exclusao" value="sim">Sim, excluir minha conta</button>
+                    </div>
+                </form>
+            </dialog>
+            <?php else: ?>
+            <p><a href="login.php">Entre na sua conta</a> para solicitar a exclusão.</p>
+            <?php endif; ?>
+        </section>
         </section>
 
     </div>
 </main>
+<script src="assets/js/excluir-conta.js" defer></script>
 <?php require __DIR__ . '/includes/site/footer.php'; ?>
