@@ -1,24 +1,22 @@
+// NOVO: permite conferir as senhas e informa quando são diferentes.
 (() => {
-    const password = document.querySelector('#senha');
-    const confirmation = document.querySelector('#confirmar_senha');
-    const error = document.querySelector('#password-error');
-    const toggle = document.querySelector('.show-passwords');
-    if (!password || !confirmation || !error || !toggle) return;
-
-    const validateConfirmation = () => {
-        const mismatch = confirmation.value !== '' && password.value !== confirmation.value;
-        const message = mismatch ? 'As senhas não coincidem.' : '';
-        confirmation.setCustomValidity(message);
-        confirmation.setAttribute('aria-invalid', String(mismatch));
-        error.textContent = message;
-    };
-    password.addEventListener('input', validateConfirmation);
-    confirmation.addEventListener('input', validateConfirmation);
-    toggle.hidden = false;
-    toggle.addEventListener('click', () => {
-        const show = password.type === 'password';
-        password.type = confirmation.type = show ? 'text' : 'password';
-        toggle.setAttribute('aria-pressed', String(show));
-        toggle.textContent = show ? 'Ocultar senhas' : 'Mostrar senhas';
+    const senha = document.getElementById('senha');
+    const confirmar = document.getElementById('confirmar_senha');
+    const botao = document.querySelector('.show-passwords');
+    const erro = document.getElementById('password-error');
+    if (!senha || !confirmar || !botao || !erro) return;
+    botao.hidden = false;
+    botao.addEventListener('click', () => {
+        const mostrar = senha.type === 'password';
+        senha.type = confirmar.type = mostrar ? 'text' : 'password';
+        botao.textContent = mostrar ? 'Ocultar senhas' : 'Mostrar senhas';
+        botao.setAttribute('aria-pressed', String(mostrar));
     });
+    function validar() {
+        const mensagem = confirmar.value && senha.value !== confirmar.value ? 'As senhas não coincidem.' : '';
+        confirmar.setCustomValidity(mensagem);
+        erro.textContent = mensagem;
+    }
+    senha.addEventListener('input', validar);
+    confirmar.addEventListener('input', validar);
 })();
