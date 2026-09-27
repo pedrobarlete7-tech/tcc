@@ -1,5 +1,8 @@
 <?php
-require_once __DIR__ . '/includes/site/init.php';
+// ALTERADO: salva contas de aluno com senha protegida na tabela usuario.
+require_once __DIR__ . '/includes/site/auth.php';
+header('Cache-Control: no-store');
+if ($autenticado) { header('Location: index.php', true, 303); exit; }
 $nome = '';
 $email = '';
 $aceite = false;
@@ -10,19 +13,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = is_string($_POST['senha'] ?? null) ? $_POST['senha'] : '';
     $confirmacao = is_string($_POST['confirmar_senha'] ?? null) ? $_POST['confirmar_senha'] : '';
     $aceite = ($_POST['aceite_termos'] ?? '') === '1';
-    if ($nome === '') $erros[] = 'Informe seu nome completo.';
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $erros[] = 'Informe um e-mail válido.';
-    if (strlen($senha) < 6) $erros[] = 'A senha deve ter pelo menos 6 caracteres.';
+    $email = strtolower($email);
+    if (!auth_csrf_valido()) $erros[] = 'Solicitação expirada. Tente novamente.';
+    if ($nome === '' || mb_strlen($nome) > 100) $erros[] = 'Informe seu nome com até 100 caracteres.';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 150) $erros[] = 'Informe um e-mail válido com até 150 caracteres.';
+    if (mb_strlen($senha) < 6 || strlen($senha) > 72 || str_contains($senha, "\0")) $erros[] = 'A senha deve ter pelo menos 6 caracteres. Se for muito longa, use uma senha menor.';
     if ($senha !== $confirmacao) $erros[] = 'As senhas não coincidem.';
     if (!$aceite) $erros[] = 'Aceite os termos de uso para continuar.';
-    if (!$erros) $erros[] = 'O cadastro ainda não está disponível. Sua conta não foi criada; a integração está em preparação.';
+    if (!$erros) {
+        require __DIR__ . '/actions/conexao.php';
+        try {
+            auth_cadastrar($pdo, $nome, $email, $senha);
+            $_SESSION['cadastro_sucesso'] = 'Conta criada com sucesso! Entre com seu e-mail e senha.';
+            $_SESSION['csrf'] = bin2hex(random_bytes(32));
+            header('Location: login.php', true, 303);
+            exit;
+        } catch (PDOException $e) {
+            if (($e->errorInfo[1] ?? 0) === 1062) {
+                $erros[] = 'Este e-mail já está cadastrado. Faça login com sua conta.';
+            } else {
+                error_log('[EnsinoTec] Falha no cadastro. Código: ' . $e->getCode());
+                http_response_code(503);
+                $erros[] = 'Não foi possível criar a conta agora. Tente novamente mais tarde.';
+            }
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- ALTERADO: usa a aparência salva nas configurações. -->
     <script src="assets/js/tema.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#100c0e">
@@ -49,13 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul></div>
             <?php endif; ?>
             <form action="cadastro.php" method="post">
+                <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
                 <div class="field">
                     <label for="nome">Nome completo</label>
-                    <input id="nome" name="nome" type="text" placeholder="Ex.: Maria Silva" autocomplete="name" maxlength="150" value="<?= site_escape($nome) ?>" required>
+                    <input id="nome" name="nome" type="text" placeholder="Ex.: Maria Silva" autocomplete="name" maxlength="100" value="<?= site_escape($nome) ?>" required>
                 </div>
                 <div class="field">
                     <label for="email">E-mail</label>
-                    <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" maxlength="254" value="<?= site_escape($email) ?>" required>
+                    <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" maxlength="150" value="<?= site_escape($email) ?>" required>
                 </div>
                 <div class="password-grid">
                     <div class="field">
