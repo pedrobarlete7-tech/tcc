@@ -1,19 +1,51 @@
 <?php
 
 
-require_once __DIR__ . '/includes/site/init.php';
+// ALTERADO: solicita o código por e-mail quando a conta usa duas etapas.
+require_once __DIR__ . '/includes/site/auth.php';
+header('Cache-Control: no-store');
+if ($autenticado) { header('Location: index.php', true, 303); exit; }
+$sucesso = $_SESSION['cadastro_sucesso'] ?? '';
+unset($_SESSION['cadastro_sucesso']);
 $erro = '';
 $email = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = is_string($_POST['email'] ?? null) ? trim($_POST['email']) : '';
-    $erro = 'O acesso às contas ainda não está disponível. Tente novamente quando a integração estiver concluída.';
+    $email = strtolower($email);
+    $senha = is_string($_POST['senha'] ?? null) ? $_POST['senha'] : '';
+    if (!auth_csrf_valido()) {
+        $erro = 'Solicitação expirada. Tente novamente.';
+    } elseif (($_SESSION['login_bloqueado'] ?? 0) > time()) {
+        $erro = 'Muitas tentativas. Aguarde 5 minutos antes de tentar novamente.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || $senha === '' || strlen($senha) > 72 || str_contains($senha, "\0")) {
+        $erro = 'E-mail ou senha inválidos.';
+    } else {
+        require __DIR__ . '/actions/conexao.php';
+        try {
+            if (auth_entrar($pdo, $email, $senha)) {
+                header('Location: ' . (isset($_SESSION['desafio_login']) ? 'verificar-codigo.php' : 'index.php'), true, 303);
+                exit;
+            }
+            $_SESSION['login_falhas'] = ($_SESSION['login_falhas'] ?? 0) + 1;
+            if ($_SESSION['login_falhas'] >= 5) {
+                $_SESSION['login_bloqueado'] = time() + 300;
+                $_SESSION['login_falhas'] = 0;
+            }
+            $erro = 'E-mail ou senha inválidos.';
+        } catch (PDOException $e) {
+            error_log('[EnsinoTec] Falha no login. Código: ' . $e->getCode());
+            http_response_code(503);
+            $erro = 'Não foi possível entrar agora. Tente novamente mais tarde.';
+        } catch (RuntimeException $e) {
+            $erro = $e->getMessage();
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-    <!-- ALTERADO: usa a aparência salva nas configurações. -->
     <script src="assets/js/tema.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#380d19">
@@ -36,11 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <p class="login-alert" role="alert"><?= site_escape($erro) ?></p>
 <?php endif; ?>
 <form action="login.php" method="post">
+<?php if ($sucesso !== ''): ?><p class="login-alert" role="status"><?= site_escape($sucesso) ?></p><?php endif; ?>
+<input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
 <div class="field">
 <label for="email">E-mail</label>
 <div class="input-line">
 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>
-<input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" autocomplete="username" maxlength="254" value="<?= site_escape($email) ?>" required>
+<input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" autocomplete="username" maxlength="150" value="<?= site_escape($email) ?>" required>
 </div>
 </div>
 <div class="field">
@@ -53,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 <div class="login-options">
 <label class="remember-email" hidden><input type="checkbox" id="lembrar-email"> Lembrar e-mail</label>
-<details class="password-help"><summary>Esqueceu a senha?</summary><p>A recuperação de senha estará disponível em breve. Se precisar de ajuda, <a href="contato.php">entre em contato</a>.</p></details>
+<a class="password-help" href="recuperar-senha.php">Esqueceu a senha?</a>
 </div>
 <button class="login-submit" type="submit">Entrar <span aria-hidden="true">→</span></button>
 </form>
