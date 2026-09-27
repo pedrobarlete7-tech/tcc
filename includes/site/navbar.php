@@ -1,3 +1,7 @@
+<?php
+// ALTERADO: adiciona saída segura para a conta conectada.
+require_once __DIR__ . '/auth.php';
+?>
 <header class="site-header">
     <nav class="site-container navigation" aria-label="Navegação principal">
         <a class="brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
@@ -38,6 +42,10 @@
                     <ul class="dropdown-panel">
                         <li><a href="perfil.php">Meu perfil</a></li>
                         <li><a href="configuracoes.php">Configurações</a></li>
+                        <li><form action="sair.php" method="post">
+                            <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
+                            <button type="submit" style="display:block;width:100%;padding:13px 12px;border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer">Sair</button>
+                        </form></li>
                     </ul>
                 </details>
                 <?php else: ?>
@@ -46,7 +54,6 @@
             </li>
         </ul>
     </nav>
-    <!-- ALTERADO: drawer mobile reutiliza os mesmos links da navbar. -->
     <dialog class="mobile-drawer" id="mobile-drawer" aria-label="Menu EnsinoTec">
         <div class="drawer-heading">
             <span class="brand">EnsinoTec</span>
