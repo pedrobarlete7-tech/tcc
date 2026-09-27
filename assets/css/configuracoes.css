@@ -1,4 +1,6 @@
-/* ALTERADO: estilos centrais isolados para não modificar a navbar e o footer. */
+/* ALTERADO: acomoda os nomes e e-mails reais sem ultrapassar os cartões. */
+.pagina-configuracoes .profile-info, .pagina-configuracoes .user-info > div:last-child { min-width: 0; overflow-wrap: anywhere; }
+.pagina-configuracoes .big-avatar, .pagina-configuracoes .user-info .avatar { flex-shrink: 0; }
 .pagina-configuracoes { flex: 1; background: #f5f7fb; color: #1f2937; font-family: Arial, Helvetica, sans-serif; }
 .pagina-configuracoes *, .pagina-configuracoes *::before, .pagina-configuracoes *::after { box-sizing: border-box; }
 .pagina-configuracoes .main { width: min(100%, 1100px); margin: 0 auto; padding: 30px 40px 50px; }
