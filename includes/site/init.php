@@ -2,6 +2,13 @@
 declare(strict_types=1);
 
 if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.use_strict_mode', '1');
+    session_set_cookie_params([
+        'httponly' => true,
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'samesite' => 'Lax',
+        'path' => '/',
+    ]);
     session_start();
 }
 
@@ -10,14 +17,26 @@ function site_escape(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-// The authentication controller must populate this only after validating login.
+// ALTERADO: encerra sessões antigas após troca de senha ou mudança de segurança.
+if (!empty($_SESSION['usuario']['id_usuario'])) {
+    require_once __DIR__ . '/../../actions/conexao.php';
+    require_once __DIR__ . '/seguranca.php';
+    try {
+        $contaAtual = seguranca_conta($pdo, (int) $_SESSION['usuario']['id_usuario']);
+        if (!$contaAtual || (int) ($_SESSION['auth_versao'] ?? 0) !== (int) $contaAtual['versao']) {
+            unset($_SESSION['usuario'], $_SESSION['auth_versao']);
+            session_regenerate_id(true);
+        }
+    } catch (PDOException $e) {
+        http_response_code(503);
+        exit('Não foi possível verificar a conta. Confira se o SQL de segurança foi importado.');
+    }
+}
 $usuario = $_SESSION['usuario'] ?? null;
 $autenticado = is_array($usuario) && !empty($usuario['id_usuario']);
 $nomeUsuario = $autenticado ? (string) ($usuario['nome'] ?? 'Meu perfil') : '';
 $fotoUsuario = $autenticado ? (string) ($usuario['foto_perfil'] ?? '') : '';
-// Accept only local profile uploads, never arbitrary protocols or remote tracking URLs.
 if (!preg_match('~^uploads/perfis/[a-zA-Z0-9_/-]+\.(?:png|jpe?g|webp)$~i', $fotoUsuario)) {
     $fotoUsuario = '';
 }
 
-// ALTERADO: as matérias agora são consultadas em materias.php pelo header.
