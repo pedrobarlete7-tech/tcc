@@ -202,10 +202,12 @@ try {
 } catch {
     failed = true;
 }
-const disciplines = MATERIAS.map(item => ({...item}));
+// ALTERADO: as disciplinas e seus IDs vêm do banco, inclusive após edição ou exclusão.
+const disciplines = [];
 records.forEach(record => {
-    if (!disciplines.some(item => normalize(item.nome) === normalize(record.materia))) {
-        disciplines.push({id: 'banco-' + record.id_materia, nome: record.materia});
+    if (!disciplines.some(item => item.bancoId === Number(record.id_materia))) {
+        const modelo = MATERIAS.find(item => normalize(item.nome) === normalize(record.materia));
+        disciplines.push({id: modelo?.id ?? 'banco-' + record.id_materia, bancoId: Number(record.id_materia), nome: record.materia});
     }
 });
 const fragment = document.createDocumentFragment();
@@ -219,7 +221,7 @@ if (failed) {
 }
 disciplines.forEach(materia => {
     const topics = SUBMENUS.find(s => s.materiaId === materia.id)?.itens ?? [];
-    const registered = records.filter(item => normalize(item.materia) === normalize(materia.nome) && Number(item.id_conteudo) > 0);
+    const registered = records.filter(item => Number(item.id_materia) === materia.bancoId && Number(item.id_conteudo) > 0);
     const used = new Set();
     const resolve = item => {
         const name = normalize(item.titulo);
@@ -254,7 +256,6 @@ disciplines.forEach(materia => {
         empty.textContent = 'Conteúdos em breve.';
         discipline.list.append(empty);
     }
-    // ALTERADO: somente Matemática exibe apenas conteúdos cadastrados no banco.
     if (materia.id === 'matematica') {
         discipline.list.querySelectorAll('.content-pending').forEach(item => item.closest('li').remove());
         discipline.list.querySelectorAll('.topic-group').forEach(section => {
@@ -273,6 +274,12 @@ disciplines.forEach(materia => {
     count.setAttribute('aria-label', discipline.list.children.length + ' grupos ou assuntos');
     fragment.append(discipline.li);
 });
+if (!disciplines.length) {
+    const empty = document.createElement('li');
+    empty.className = 'subjects-message';
+    empty.textContent = 'Nenhuma disciplina cadastrada.';
+    fragment.append(empty);
+}
 target.replaceChildren(fragment);
 target.querySelectorAll('details').forEach(details => {
     details.addEventListener('toggle', () => {
