@@ -1,0 +1,13 @@
+/* NOVO: mantém todas as seções do conteúdo abertas em uma única tela. */
+.editor-layout { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 24px; align-items: start; }
+.editor-secao { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--border); }
+.editor-item { min-width: 0; margin: 16px 0; padding: 20px; border: 1px solid var(--border); border-radius: 12px; }
+.editor-item legend { padding: 0 8px; color: var(--wine); font-weight: 700; }
+.editor-item .editor-item { padding: 14px; }
+.editor-remover { color: var(--muted); font-size: .9rem; }
+.editor-lista article { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); }
+.editor-lista h3 { font-size: 1rem; }
+.editor-lista .gestao-acoes { margin-top: 12px; }
+.editor-pagina textarea[name="conteudo[texto]"] { min-height: 240px; }
+@media (max-width: 1000px) { .editor-layout { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .editor-item { padding: 12px; } .editor-layout > .gestao-card { padding: 16px; } }
