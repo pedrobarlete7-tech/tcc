@@ -1,14 +1,16 @@
 <?php
-// ALTERADO: adiciona saída segura para a conta conectada.
+// ALTERADO: dá acesso à gestão de matérias e conteúdos para professores e administradores.
 require_once __DIR__ . '/auth.php';
 ?>
 <header class="site-header">
     <nav class="site-container navigation" aria-label="Navegação principal">
         <a class="brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
+        <div class="navigation-actions">
+        <ul class="mobile-account" id="mobile-account" aria-label="Conta"></ul>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Abrir menu" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            <span>Menu</span>
         </button>
+        </div>
         <ul class="navigation-links" id="navigation-links">
             <li>
                 <details class="dropdown">
@@ -29,7 +31,10 @@ require_once __DIR__ . '/auth.php';
             </li>
             <li><a href="sobre.php">Sobre</a></li>
             <li><a href="contato.php">Contato</a></li>
-            <li>
+            <?php if ($autenticado && ($contaAtual['tipo_usuario'] ?? '') === 'administrador'): ?>
+            <li><a href="administracao.php" aria-current="<?= basename($_SERVER['SCRIPT_NAME'] ?? '') === 'administracao.php' ? 'page' : 'false' ?>">Administração</a></li>
+            <?php endif; ?>
+            <li class="account-item">
                 <?php if ($autenticado): ?>
                 <details class="dropdown profile">
                     <summary aria-label="Perfil de <?= site_escape($nomeUsuario) ?>">
@@ -42,6 +47,9 @@ require_once __DIR__ . '/auth.php';
                     <ul class="dropdown-panel">
                         <li><a href="perfil.php">Meu perfil</a></li>
                         <li><a href="configuracoes.php">Configurações</a></li>
+                        <?php if (in_array($contaAtual['tipo_usuario'] ?? '', ['professor', 'administrador'], true)): ?>
+                        <li><a href="gerenciar-materias.php">Matérias e conteúdos</a></li>
+                        <?php endif; ?>
                         <li><form action="sair.php" method="post">
                             <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
                             <button type="submit" style="display:block;width:100%;padding:13px 12px;border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer">Sair</button>
@@ -64,3 +72,4 @@ require_once __DIR__ . '/auth.php';
         <nav class="drawer-content" aria-label="Navegação mobile"></nav>
     </dialog>
 </header>
+
