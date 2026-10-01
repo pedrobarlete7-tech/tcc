@@ -6,13 +6,15 @@
     const content = drawer?.querySelector('.drawer-content');
     if (!toggle || !links || !drawer || !close || !content) return;
     const originalParent = links.parentElement;
+    const accountSlot = document.querySelector('#mobile-account');
+    const profileItem = links.querySelector('.profile')?.closest('li');
     const desktop = window.matchMedia('(min-width: 48rem)');
     const dropdowns = [...links.querySelectorAll('.dropdown')];
     let savedOverflow = '';
     let locked = false;
     toggle.hidden = false;
 
-    // ALTERADO: move os mesmos links para o drawer, sem duplicar menus ou IDs.
+    // ALTERADO: mantém o mesmo perfil na barra mobile e restaura sua posição no desktop.
     function closeDrawer() {
         if (drawer.open) drawer.close();
         if (locked) document.body.style.overflow = savedOverflow;
@@ -21,6 +23,7 @@
     }
     function sync() {
         closeDrawer();
+        if (profileItem && accountSlot) (desktop.matches ? links : accountSlot).append(profileItem);
         (desktop.matches ? originalParent : content).append(links);
         dropdowns.forEach(item => { item.open = false; });
         if (desktop.matches && document.activeElement === toggle) originalParent.querySelector('.brand').focus();
@@ -29,6 +32,7 @@
     desktop.addEventListener('change', sync);
     toggle.addEventListener('click', () => {
         if (desktop.matches) return;
+        dropdowns.forEach(item => { item.open = false; });
         savedOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         locked = true;
@@ -46,7 +50,6 @@
         event.preventDefault();
         closeDrawer();
     });
-    // ALTERADO: clique no fundo escuro fecha o painel; diálogo controla foco e Escape.
     drawer.addEventListener('click', event => {
         const rect = drawer.getBoundingClientRect();
         if (event.target === drawer && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeDrawer();
