@@ -149,7 +149,7 @@ ul{list-style:none;margin:0;padding:0}
 .content-pending > span { min-width: 0; overflow-wrap: anywhere; }
 .content-pending small { flex-shrink: 0; color: #725560; background: #f8edef; border-radius: 6px; padding: 3px 6px; font-size: .625rem; }
 
-/* ALTERADO: drawer mobile vindo da direita, inspirado na referência enviada. */
+
 .mobile-drawer {
     position: fixed;
     inset: 0 0 0 auto;
@@ -172,7 +172,7 @@ ul{list-style:none;margin:0;padding:0}
 .drawer-heading .brand { font-size: 1.4rem; }
 .drawer-close { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border: 0; background: #f5f5f5; border-radius: 50%; }
 .mobile-drawer .navigation-links { flex-direction: column; width: 100%; gap: 8px; }
-.mobile-drawer .navigation-links > li:last-child { order: -1; margin-bottom: 22px; }
+.mobile-drawer .navigation-links > .account-item { order: -1; margin-bottom: 22px; }
 .mobile-drawer .navigation-links .sign-in { width: fit-content; min-height: 38px; padding: 8px 22px; border-radius: 24px; font-size: .9375rem; }
 .mobile-drawer .navigation-links > li > a:not(.sign-in),
 .mobile-drawer .dropdown > summary { padding: 16px 0; border-radius: 0; font-size: 1.4rem; min-height: 56px; }
@@ -187,3 +187,16 @@ ul{list-style:none;margin:0;padding:0}
 .mobile-drawer .content-pending { flex-wrap: wrap; padding: 10px 6px; }
 @keyframes drawer-enter { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @media (prefers-reduced-motion: reduce) { .mobile-drawer[open] { animation: none; } }
+/* ALTERADO: avatar na barra mobile e botão de menu somente com três barras. */
+.navigation-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.mobile-account { display: flex; margin: 0; padding: 0; list-style: none; }
+.mobile-account:empty { display: none; }
+.mobile-account .dropdown-panel { position: absolute; top: calc(100% + 8px); right: 0; width: 210px; max-width: calc(100vw - 2rem); margin: 0; }
+.mobile-account .dropdown-panel a:hover { background: var(--soft); }
+.navigation-actions .nav-toggle { justify-content: center; width: 44px; height: 44px; padding: 10px; border: 0; border-radius: 0; background: transparent; }
+@media (max-width: 47.999rem) {
+    .navigation { column-gap: 8px; }
+}
+@media (min-width: 48rem) {
+    .navigation-actions { display: none; }
+}html[data-theme="dark"] .navigation-actions .nav-toggle { background: transparent; }
