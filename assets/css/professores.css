@@ -1,0 +1,24 @@
+/* NOVO: formulários e respostas de professor com suporte aos dois temas. */
+.professor-area { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 24px; }
+.professor-area h2 { font-size: 1.2rem; color: var(--wine); margin: 0 0 14px; }
+.pagina-perfil .professor-area p { margin-bottom: 16px; line-height: 1.7; }
+.pedido-form { display: grid; gap: 12px; }
+.pedido-form label { font-size: .875rem; font-weight: 600; }
+.pedido-form textarea { width: 100%; min-height: 100px; resize: vertical; padding: 12px; font: inherit; color: var(--text); background: var(--surface, #fff); border: 1px solid var(--border); border-radius: 10px; }
+.pedido-botao { display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; min-height: 46px; border: 1px solid #940000; border-radius: 10px; background: #940000; color: #fff; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
+.pedido-botao:hover { background: #710000; }
+.pedido-botao.pedido-secundario { background: transparent; color: var(--wine); border-color: var(--border); }
+.pedido-botao.pedido-secundario:hover { background: var(--soft); }
+.pedido-aviso, .pedido-resposta { padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--soft); line-height: 1.6; overflow-wrap: anywhere; }
+.pedido-filtros, .pedido-acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-block: 20px; }
+.pedido-filtros [aria-current="page"] { background: var(--soft); border-color: var(--wine); }
+.pedido-lista { display: grid; gap: 20px; }
+.pedido-card { padding: clamp(20px, 3vw, 32px); border: 1px solid var(--border); border-radius: 18px; background: var(--surface, #fff); }
+.pedido-card h2 { margin-top: 0; font-size: 1.25rem; }
+.pedido-card p { line-height: 1.7; }
+.pedido-data { color: var(--muted); font-size: .875rem; }
+.pedido-mensagem { padding: 16px; border-left: 3px solid var(--wine); background: var(--soft); }
+.pedido-vazio { padding: 32px; border: 1px dashed var(--border); border-radius: 16px; text-align: center; }
+.admin-opcoes .admin-link { margin-top: 20px; }
+html[data-theme="dark"] .pedido-botao:not(.pedido-secundario) { background: #a51d35; border-color: #a51d35; }
+@media (max-width: 480px) { .pedido-acoes { flex-direction: column; } .pedido-filtros .admin-link { flex: 1; } }
