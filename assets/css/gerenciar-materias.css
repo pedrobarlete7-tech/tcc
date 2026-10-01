@@ -1,0 +1,31 @@
+/* ALTERADO: compartilha o visual entre a gestão de matérias e conteúdos. */
+.gestao { flex: 1; width: min(1180px, calc(100% - 2rem)); margin-inline: auto; padding-block: clamp(24px, 4vw, 56px); overflow-wrap: anywhere; }
+.gestao-intro { border-left: 4px solid var(--wine); padding: 8px 0 8px 24px; margin-bottom: 32px; }
+.gestao h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.2; margin: 12px 0; }
+.gestao h2 { font-size: 1.25rem; margin: 0 0 24px; }
+.gestao h3 { font-size: 1.2rem; margin: 12px 0; }
+.gestao p { line-height: 1.65; }
+.gestao-intro p, .gestao-meta, .gestao label span, .gestao-lista h2 span { color: var(--muted); }
+.gestao-grade { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 28px; align-items: start; }
+.gestao-card { background: var(--surface, #fff); border: 1px solid var(--border); padding: clamp(20px, 3vw, 30px); border-radius: 18px; box-shadow: 0 6px 24px #00000006; min-width: 0; }
+.gestao-lista .gestao-card + .gestao-card { margin-top: 16px; }
+.gestao label { display: block; font-weight: 600; margin: 20px 0 8px; }
+.gestao input:not([type="hidden"]):not([type="checkbox"]), .gestao textarea, .gestao select { display: block; width: 100%; min-width: 0; padding: 13px; font: inherit; color: var(--text); background: var(--soft); border: 1px solid var(--border); border-radius: 10px; }
+.gestao textarea { resize: vertical; }
+.gestao :is(input, textarea, select, button, a):focus-visible { outline: 3px solid var(--wine); outline-offset: 3px; }
+.gestao-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.gestao-botao { display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; min-height: 46px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface, #fff); color: var(--wine); font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+.gestao-botao:hover { background: var(--soft); }
+.gestao-botao.principal { color: #fff; background: #940000; border-color: #940000; }
+.gestao-botao.principal:hover { background: #710000; }
+html[data-theme="dark"] .gestao-botao.principal { background: #a51d35; border-color: #a51d35; }
+.gestao-aviso { border: 1px solid var(--wine); border-radius: 12px; padding: 16px; background: var(--surface, #fff); }
+.gestao-descricao { white-space: pre-wrap; }
+.gestao-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 760px) { .gestao-grade { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .gestao-acoes { flex-direction: column; } }
+
+.gestao label.gestao-check { display: flex; align-items: center; gap: 12px; min-height: 44px; }
+.gestao-check input { width: 20px; height: 20px; accent-color: var(--wine); }
+.gestao-subsecoes { border-top: 1px solid var(--border); padding-top: 18px; }
+
