@@ -1,5 +1,5 @@
 <?php
-// NOVO: lista solicitações e registra a decisão do administrador conectado.
+// ALTERADO: confirma o desfazimento em um pop-up e mantém o aviso de sucesso.
 require_once __DIR__ . '/includes/site/auth.php';
 require_once __DIR__ . '/includes/site/professores.php';
 header('Cache-Control: no-store');
@@ -11,6 +11,7 @@ unset($_SESSION['resposta_professor']);
 $filtro = is_string($_GET['status'] ?? null) ? $_GET['status'] : 'pendente';
 if (!in_array($filtro, ['pendente', 'aprovada', 'recusada'], true)) $filtro = 'pendente';
 $pagina = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100000]]) ?: 1;
+$desfazer = filter_input(INPUT_GET, 'desfazer', FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]) ?: 0;
 $pedidos = [];
 $total = 0;
 if (!$permitido) { http_response_code(403); }
@@ -20,11 +21,18 @@ else {
             if (!auth_csrf_valido()) { http_response_code(403); throw new RuntimeException('Solicitação expirada. Atualize a página e tente novamente.'); }
             $id = filter_input(INPUT_POST, 'pedido', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
             if (!$id) throw new RuntimeException('Solicitação inválida.');
+            if (($_POST['acao'] ?? '') === 'desfazer') {
+                if (($_POST['confirmar'] ?? '') !== 'sim') throw new RuntimeException('Confirme se deseja desfazer a decisão.');
+                $statusAnterior=is_string($_POST['status_anterior']??null)?$_POST['status_anterior']:'';
+                professor_desfazer($pdo,(int)$contaAtual['id_usuario'],$id,$statusAnterior);
+                $_SESSION['resposta_professor']='decisão desfeita com sucesso';
+                header('Location: solicitacoes-professor.php',true,303); exit;
+            }
             $decisao = is_string($_POST['decisao'] ?? null) ? $_POST['decisao'] : '';
             $observacao = is_string($_POST['observacao'] ?? null) ? trim($_POST['observacao']) : '';
             professor_responder($pdo, (int) $contaAtual['id_usuario'], $id, $decisao, $observacao);
-            $_SESSION['resposta_professor'] = $decisao === 'aprovada' ? 'Solicitação aprovada. A conta agora é de professor.' : 'Solicitação recusada. A conta continua com a permissão anterior.';
-            header('Location: solicitacoes-professor.php', true, 303); exit;
+            $_SESSION['resposta_professor'] = $decisao === 'aprovada' ? 'aceito com sucesso' : 'recusado com sucesso';
+            header('Location: solicitacoes-professor.php?status='.$decisao, true, 303); exit;
         }
     } catch (PDOException $e) {
         error_log('[EnsinoTec] Falha ao responder solicitação. Código: ' . $e->getCode());
@@ -54,7 +62,7 @@ require __DIR__ . '/includes/site/header.php';
     <h1>Solicitações de professor</h1>
     <p class="admin-descricao">A aprovação libera o acesso de professor. A resposta também aparece no perfil do solicitante.</p>
     <?php if ($erroPedidos): ?><p class="pedido-aviso" role="alert"><?= site_escape($erroPedidos) ?></p><?php endif; ?>
-    <?php if ($avisoPedidos): ?><p class="pedido-aviso" role="status"><?= site_escape($avisoPedidos) ?></p><?php endif; ?>
+    <?php if ($avisoPedidos): ?><p class="pedido-aviso" role="status" data-popup-aviso><?= site_escape($avisoPedidos) ?></p><?php endif; ?>
     <nav class="pedido-filtros" aria-label="Filtrar solicitações">
         <?php foreach (['pendente' => 'Pendentes', 'aprovada' => 'Aprovadas', 'recusada' => 'Recusadas'] as $valor => $rotulo): ?>
         <a class="admin-link" href="solicitacoes-professor.php?status=<?= $valor ?>" <?= $filtro === $valor ? 'aria-current="page"' : '' ?>><?= $rotulo ?></a>
@@ -83,6 +91,20 @@ require __DIR__ . '/includes/site/header.php';
             <?php else: ?>
             <p>Respondido por <?= site_escape($pedido['administrador_nome'] ?? 'Administrador indisponível') ?><?= $pedido['data_resposta'] ? ' em ' . site_escape(date('d/m/Y H:i', strtotime($pedido['data_resposta']))) : '' ?>.</p>
             <?php if ($pedido['observacao_admin']): ?><p class="pedido-resposta"><?= nl2br(site_escape($pedido['observacao_admin'])) ?></p><?php endif; ?>
+            <?php if ($desfazer === (int)$pedido['id_solicitacao']): ?>
+            <dialog class="pedido-confirmacao" id="confirmar-desfazer" open aria-labelledby="desfazer-titulo-<?= (int)$pedido['id_solicitacao'] ?>" aria-describedby="desfazer-descricao">
+                <h3 id="desfazer-titulo-<?= (int)$pedido['id_solicitacao'] ?>">Desfazer esta decisão?</h3>
+                <p id="desfazer-descricao">A solicitação voltará para Pendentes e poderá ser aprovada ou recusada novamente.<?= $pedido['status']==='aprovada'?' A conta voltará a ser aluno e perderá o acesso às ferramentas de professor.':'' ?></p>
+                <?php if ($erroPedidos): ?><p class="pedido-aviso" role="alert"><?= site_escape($erroPedidos) ?></p><?php endif; ?>
+                <form method="post" action="solicitacoes-professor.php?status=<?= $filtro ?>&amp;pagina=<?= $pagina ?>&amp;desfazer=<?= (int)$pedido['id_solicitacao'] ?>" class="pedido-form">
+                    <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
+                    <input type="hidden" name="pedido" value="<?= (int)$pedido['id_solicitacao'] ?>">
+                    <input type="hidden" name="acao" value="desfazer">
+                    <input type="hidden" name="status_anterior" value="<?= site_escape($pedido['status']) ?>">
+                    <div class="pedido-acoes"><button type="submit" class="pedido-botao" name="confirmar" value="sim">Sim, desfazer decisão</button><a class="admin-link" data-cancelar-desfazer autofocus href="solicitacoes-professor.php?status=<?= $filtro ?>&amp;pagina=<?= $pagina ?>">Cancelar</a></div>
+                </form>
+            </dialog>
+            <?php else: ?><a class="admin-link" href="solicitacoes-professor.php?status=<?= $filtro ?>&amp;pagina=<?= $pagina ?>&amp;desfazer=<?= (int)$pedido['id_solicitacao'] ?>">Desfazer decisão</a><?php endif; ?>
             <?php endif; ?>
         </article>
     <?php endforeach; ?>
@@ -94,4 +116,6 @@ require __DIR__ . '/includes/site/header.php';
     </nav>
 <?php endif; ?>
 </main>
+<script src="assets/js/confirmar-professor.js" defer></script>
+<?php $popupSucesso=$permitido?$avisoPedidos:''; require __DIR__ . '/includes/site/popup-sucesso.php'; ?>
 <?php require __DIR__ . '/includes/site/footer.php'; ?>
