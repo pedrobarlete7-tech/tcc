@@ -1,5 +1,7 @@
 <?php
-// ALTERADO: mostra os dados atuais da conta consultada no banco.
+// ALTERADO: remove o bloco de notificações das configurações.
+
+
 require_once __DIR__ . '/includes/site/auth.php';
 header('Cache-Control: no-store');
 if (!$autenticado) {
@@ -45,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $tituloPagina = 'Configurações — EnsinoTec';
 $estilosPagina = [
-    'assets/css/configuracoes.css',
+    'assets/css/configuracoes.css?v=progresso2',
     'assets/css/excluir-conta.css',
 ];
 require __DIR__ . '/includes/site/header.php';
@@ -56,7 +58,7 @@ require __DIR__ . '/includes/site/header.php';
         
         <a href="index.php" class="back-button">
             <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
-            Voltar
+            <span data-i18n="Voltar">Voltar</span>
         </a>
 
 
@@ -64,16 +66,11 @@ require __DIR__ . '/includes/site/header.php';
         <header class="header">
 
             <div>
-                <h1>Configurações</h1>
-                <p>Gerencie suas preferências e informações da conta.</p>
+                <h1><span data-i18n="Configurações">Configurações</span></h1>
+                <p><span data-i18n="Gerencie suas preferências e informações da conta.">Gerencie suas preferências e informações da conta.</span></p>
             </div>
 
             <div class="user">
-
-                <div class="notification">
-                    <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0v5l-2 4h16l-2-4V8M10 21h4"/></svg>
-                    <span>3</span>
-                </div>
 
                 <div class="user-info">
 
@@ -83,7 +80,7 @@ require __DIR__ . '/includes/site/header.php';
 
                     <div>
                         <strong><?= site_escape($nomePerfil) ?></strong>
-                        <small><?= site_escape($tipoPerfil) ?></small>
+                        <small><span data-i18n-message><?= site_escape($tipoPerfil) ?></span></small>
                     </div>
 
                 </div>
@@ -106,8 +103,8 @@ require __DIR__ . '/includes/site/header.php';
                     </div>
 
                     <div>
-                        <h2>Perfil</h2>
-                        <p>Informações pessoais da sua conta</p>
+                        <h2><span data-i18n="Perfil">Perfil</span></h2>
+                        <p><span data-i18n="Informações pessoais da sua conta">Informações pessoais da sua conta</span></p>
                     </div>
 
                 </div>
@@ -130,79 +127,15 @@ require __DIR__ . '/includes/site/header.php';
 
                         <p>
                             <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3zM14 9h4m-4 4h4M6 9h4v6H6z"/></svg>
-                            ID da conta: <?= (int) $perfilConta['id_usuario'] ?> · <?= site_escape($tipoPerfil) ?>
+                            <span data-i18n="ID da conta:">ID da conta:</span> <?= (int) $perfilConta['id_usuario'] ?> · <span data-i18n-message><?= site_escape($tipoPerfil) ?></span>
                         </p>
 
                     </div>
 
                     <button class="btn">
                         <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16 12-12 4 4L8 20H4zm9-9 4 4"/></svg>
-                        Editar perfil
+                        <span data-i18n="Editar perfil">Editar perfil</span>
                     </button>
-
-                </div>
-
-            </div>
-
-
-            
-            <div class="card">
-
-                <div class="card-title">
-
-                    <div class="title-icon orange">
-                        <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0v5l-2 4h16l-2-4V8M10 21h4"/></svg>
-                    </div>
-
-                    <div>
-                        <h2>Notificações</h2>
-                        <p>Escolha quais notificações deseja receber</p>
-                    </div>
-
-                </div>
-
-
-                <div class="option">
-
-                    <div>
-                        <strong>Avisos da escola</strong>
-                        <p>Receber comunicados importantes da escola</p>
-                    </div>
-
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span></span>
-                    </label>
-
-                </div>
-
-
-                <div class="option">
-
-                    <div>
-                        <strong>Atividades</strong>
-                        <p>Notificações sobre novas atividades</p>
-                    </div>
-
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span></span>
-                    </label>
-
-                </div>
-
-
-                <div class="option">
-
-                    <div>
-                        <strong>Mensagens</strong>
-                        <p>Receber mensagens de professores</p>
-                    </div>
-
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span></span>
-                    </label>
 
                 </div>
 
@@ -219,8 +152,8 @@ require __DIR__ . '/includes/site/header.php';
                     </div>
 
                     <div>
-                        <h2>Segurança</h2>
-                        <p>Proteja sua conta escolar</p>
+                        <h2><span data-i18n="Segurança">Segurança</span></h2>
+                        <p><span data-i18n="Proteja sua conta escolar">Proteja sua conta escolar</span></p>
                     </div>
 
                 </div>
@@ -229,11 +162,11 @@ require __DIR__ . '/includes/site/header.php';
                 <div class="security-option">
 
                     <div>
-                        <strong>Alterar senha</strong>
-                        <p>Atualize sua senha de acesso</p>
+                        <strong><span data-i18n="Alterar senha">Alterar senha</span></strong>
+                        <p><span data-i18n="Atualize sua senha de acesso">Atualize sua senha de acesso</span></p>
                     </div>
 
-                    <a class="arrow" href="recuperar-senha.php" aria-label="Recuperar ou alterar senha">→</a>
+                    <a class="arrow" href="recuperar-senha.php" aria-label="Recuperar ou alterar senha" data-i18n-aria-label="Recuperar ou alterar senha">→</a>
 
                 </div>
 
@@ -241,11 +174,11 @@ require __DIR__ . '/includes/site/header.php';
                 <div class="security-option">
 
                     <div>
-                        <strong>Autenticação em duas etapas</strong>
-                        <p><?= $autenticado ? (!empty($contaAtual["dois_fatores"]) ? "Ativada: código por e-mail." : "Desativada. Ative para pedir um código no login.") : "Entre na sua conta para configurar." ?></p>
+                        <strong><span data-i18n="Autenticação em duas etapas">Autenticação em duas etapas</span></strong>
+                        <p data-i18n-message><?= $autenticado ? (!empty($contaAtual["dois_fatores"]) ? "Ativada: código por e-mail." : "Desativada. Ative para pedir um código no login.") : "Entre na sua conta para configurar." ?></p>
                     </div>
 
-                    <a class="arrow" href="seguranca.php" aria-label="Configurar autenticação em duas etapas">→</a>
+                    <a class="arrow" href="seguranca.php" aria-label="Configurar autenticação em duas etapas" data-i18n-aria-label="Configurar autenticação em duas etapas">→</a>
 
                 </div>
 
@@ -262,28 +195,28 @@ require __DIR__ . '/includes/site/header.php';
                     </div>
 
                     <div>
-                        <h2>Aparência</h2>
-                        <p>Personalize a aparência do portal</p>
+                        <h2><span data-i18n="Aparência">Aparência</span></h2>
+                        <p><span data-i18n="Personalize a aparência do portal">Personalize a aparência do portal</span></p>
                     </div>
 
                 </div>
 
 
-                <div class="theme" role="group" aria-label="Aparência do site">
+                <div class="theme" role="group" aria-label="Aparência do site" data-i18n-aria-label="Aparência do site">
 
                     <button type="button" class="theme-option" data-theme-choice="light" aria-pressed="false">
                         <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>
-                        <span>Claro</span>
+                        <span><span data-i18n="Claro">Claro</span></span>
                     </button>
 
                     <button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false">
                         <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></svg>
-                        <span>Escuro</span>
+                        <span><span data-i18n="Escuro">Escuro</span></span>
                     </button>
 
                     <button type="button" class="theme-option" data-theme-choice="system" aria-pressed="false">
                         <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18v14H3zM12 17v4m-5 0h10"/></svg>
-                        <span>Sistema</span>
+                        <span><span data-i18n="Sistema">Sistema</span></span>
                     </button>
 
                 </div>
@@ -292,43 +225,45 @@ require __DIR__ . '/includes/site/header.php';
 
 
             
+            <?php require __DIR__ . '/includes/site/idioma-card.php'; ?>
+
             <div class="actions">
 
                 <button type="button" class="cancel" data-theme-cancel>
-                    Cancelar
+                    <span data-i18n="Cancelar">Cancelar</span>
                 </button>
 
                 <button type="button" class="save" data-theme-save>
                     <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg>
-                    Salvar alterações
+                    <span data-i18n="Salvar alterações">Salvar alterações</span>
                 </button>
 
             </div>
 
-        <p class="theme-status" id="theme-status" role="status" aria-live="polite"></p>
+        <p class="theme-status" id="theme-status" data-i18n-message role="status" aria-live="polite"></p>
         <section class="card conta-exclusao" aria-labelledby="excluir-titulo">
-            <h2 id="excluir-titulo">Excluir conta</h2>
+            <h2 id="excluir-titulo"><span data-i18n="Excluir conta">Excluir conta</span></h2>
             <?php if ($erroExclusao !== ''): ?>
-            <p role="alert"><?= site_escape($erroExclusao) ?></p>
+            <p role="alert"><span data-i18n-message><?= site_escape($erroExclusao) ?></span></p>
             <?php endif; ?>
             <?php if ($autenticado): ?>
-            <p>Ao excluir sua conta, você perderá o acesso e o progresso de aprendizagem vinculado a ela. Essa ação não pode ser desfeita.</p>
-            <button class="excluir-botao" type="button" id="abrir-exclusao" aria-haspopup="dialog" aria-controls="confirmar-exclusao" hidden>Excluir minha conta</button>
-            <noscript><p>Ative o JavaScript para abrir a confirmação de exclusão.</p></noscript>
+            <p><span data-i18n="Ao excluir sua conta, você perderá o acesso e os dados vinculados a ela. Essa ação não pode ser desfeita.">Ao excluir sua conta, você perderá o acesso e os dados vinculados a ela. Essa ação não pode ser desfeita.</span></p>
+            <button class="excluir-botao" type="button" id="abrir-exclusao" aria-haspopup="dialog" aria-controls="confirmar-exclusao" hidden><span data-i18n="Excluir minha conta">Excluir minha conta</span></button>
+            <noscript><p><span data-i18n="Ative o JavaScript para abrir a confirmação de exclusão.">Ative o JavaScript para abrir a confirmação de exclusão.</span></p></noscript>
             <dialog id="confirmar-exclusao" class="excluir-dialog" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-descricao">
-                <h2 id="confirmar-titulo">Deseja mesmo excluir sua conta?</h2>
-                <p id="confirmar-descricao">A conta <strong><?= site_escape((string) $usuario['email']) ?></strong> será excluída permanentemente. Você será desconectado do EnsinoTec.</p>
+                <h2 id="confirmar-titulo"><span data-i18n="Deseja mesmo excluir sua conta?">Deseja mesmo excluir sua conta?</span></h2>
+                <p id="confirmar-descricao"><span data-i18n="A conta">A conta</span> <strong><?= site_escape((string) $usuario['email']) ?></strong> <span data-i18n="será excluída permanentemente. Você será desconectado do EnsinoTec.">será excluída permanentemente. Você será desconectado do EnsinoTec.</span></p>
                 <form action="configuracoes.php" method="post" id="form-exclusao">
                     <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
                     <input type="hidden" name="acao" value="excluir_conta">
                     <div class="excluir-acoes">
-                        <button type="button" class="excluir-cancelar" id="cancelar-exclusao" autofocus>Não, cancelar</button>
-                        <button type="submit" class="excluir-botao" name="confirmar_exclusao" value="sim">Sim, excluir minha conta</button>
+                        <button type="button" class="excluir-cancelar" id="cancelar-exclusao" autofocus><span data-i18n="Não, cancelar">Não, cancelar</span></button>
+                        <button type="submit" class="excluir-botao" name="confirmar_exclusao" value="sim"><span data-i18n="Sim, excluir minha conta">Sim, excluir minha conta</span></button>
                     </div>
                 </form>
             </dialog>
             <?php else: ?>
-            <p><a href="login.php">Entre na sua conta</a> para solicitar a exclusão.</p>
+            <p><a href="login.php"><span data-i18n="Entre na sua conta">Entre na sua conta</span></a> <span data-i18n="para solicitar a exclusão.">para solicitar a exclusão.</span></p>
             <?php endif; ?>
         </section>
         </section>
