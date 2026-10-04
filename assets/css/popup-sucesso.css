@@ -1,0 +1,12 @@
+/* NOVO: confirmação flutuante com as cores do EnsinoTec. */
+.popup-sucesso { position: fixed; top: 90px; right: 24px; z-index: 100; display: flex; align-items: center; gap: 14px; width: min(370px, calc(100vw - 32px)); padding: 20px; border: 1px solid var(--border, #dce3ed); border-left: 4px solid var(--wine, #940000); border-radius: 16px; background: var(--surface, #fff); color: var(--text, #131a24); box-shadow: 0 12px 40px #0002; animation: popup-sucesso-entrada .2s ease-out; }
+.popup-sucesso[hidden] { display: none; }
+.popup-sucesso-icone { display: grid; place-items: center; flex: 0 0 42px; height: 42px; border-radius: 50%; color: var(--wine, #940000); background: var(--soft, #f1f5f9); font-size: 24px; font-weight: 700; }
+.popup-sucesso-titulo { color: var(--muted, #60738d); font-size: .75rem; }
+.popup-sucesso p { margin: 5px 0 0; font-size: 1rem; font-weight: 700; line-height: 1.4; }
+.popup-sucesso button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; margin-left: auto; border: 0; border-radius: 8px; color: inherit; background: transparent; font-size: 24px; cursor: pointer; }
+.popup-sucesso button:hover { background: var(--soft, #f1f5f9); }
+.popup-sucesso button:focus-visible { outline: 3px solid var(--wine, #940000); outline-offset: 2px; }
+@keyframes popup-sucesso-entrada { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 560px) { .popup-sucesso { top: auto; bottom: max(20px, env(safe-area-inset-bottom)); right: 16px; padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .popup-sucesso { animation: none; } }
