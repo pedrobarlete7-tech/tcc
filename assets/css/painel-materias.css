@@ -1,0 +1,106 @@
+/* ALTERADO: organiza o campo de busca e os resultados no painel. */
+.painel-busca-geral { margin-bottom: 24px; }
+.painel-busca-geral label { margin-top: 0; font-size: .875rem; }
+.painel-busca-geral > div { display: flex; gap: 10px; align-items: center; }
+.painel-busca-geral input[type="search"] { flex: 1; width: auto; background: var(--surface, #fff); }
+.painel-resultados { margin-bottom: 24px; padding: 22px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface, #fff); }
+.painel-resultados h2 { margin-bottom: 8px; }
+.painel-resultados p, .painel-resultados a span { color: var(--muted); font-size: .875rem; }
+.painel-resultados li + li { border-top: 1px solid var(--border); }
+.painel-resultados li a { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 4px; }
+.painel-resultados li a:hover { color: var(--wine); background: var(--soft); }
+@media (max-width: 560px) {
+ .painel-busca-geral > div { flex-wrap: wrap; }
+ .painel-busca-geral input[type="search"] { flex-basis: 100%; }
+ .painel-resultados li a { align-items: flex-start; flex-direction: column; gap: 6px; }
+}
+body:has(.painel-materias) { background: var(--bg, #f6f7f9); }
+.painel-materias { width: min(1440px, calc(100% - 48px)); padding-block: 46px 64px; }
+.painel-cabecalho { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.painel-materias .painel-etiqueta { color: var(--wine); font-size: .72rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; margin: 0 0 8px; }
+.painel-materias h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin: 0 0 10px; }
+.painel-descricao { color: var(--muted); font-size: .875rem; margin: 0; }
+.painel-materias .gestao-botao { font-size: .8rem; min-height: 42px; border-radius: 9px; white-space: nowrap; }
+.painel-materias .principal { box-shadow: 0 4px 12px #78000018; }
+.painel-totais { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 26px; }
+.painel-totais article { position: relative; overflow: hidden; display: grid; gap: 5px; padding: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface, #fff); box-shadow: 0 2px 4px #00000003; }
+.painel-totais article::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--wine); }
+.painel-totais span { color: var(--muted); font-size: .8rem; }
+.painel-totais strong { font-size: 1.75rem; line-height: 1.3; }
+.painel-totais small { color: var(--muted); font-size: .72rem; }
+.painel-layout { display: grid; grid-template-columns: 315px minmax(0, 1fr); gap: 22px; align-items: start; }
+.painel-disciplinas, .painel-conteudos { min-width: 0; border: 1px solid var(--border); border-radius: 18px; background: var(--surface, #fff); box-shadow: 0 3px 10px #00000006; overflow: hidden; }
+.painel-disciplinas > header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); }
+.painel-disciplinas h2 { margin: 0; font-size: 1rem; }
+.painel-contador { border-radius: 50px; background: var(--soft); color: var(--wine); font-size: .72rem; font-weight: 700; padding: 7px 11px; }
+.painel-busca { padding: 15px 16px 6px; }
+.painel-busca input[type="search"] { font-size: .8rem; border-radius: 8px; padding: 11px; }
+.painel-disciplinas ul { list-style: none; margin: 0; padding: 8px; }
+.painel-disciplinas li a { display: flex; align-items: center; gap: 12px; padding: 11px 10px; border-radius: 10px; text-decoration: none; color: var(--text); min-height: 60px; }
+.painel-disciplinas li a:hover { background: var(--soft); }
+.painel-disciplinas a[aria-current="page"] { background: color-mix(in srgb, var(--wine) 7%, var(--surface, #fff)); color: var(--wine); }
+.disciplina-inicial { display: grid; place-items: center; flex: 0 0 35px; height: 35px; border-radius: 8px; background: var(--soft); font-size: .8rem; font-weight: 800; }
+[aria-current="page"] .disciplina-inicial { background: #940000; color: #fff; }
+.disciplina-nome { min-width: 0; display: grid; gap: 3px; }
+.disciplina-nome strong { font-size: .8rem; }
+.disciplina-nome small { color: var(--muted); font-size: .7rem; }
+.disciplina-seta { margin-left: auto; color: var(--muted); }
+.painel-materia-cabecalho { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 26px; border-bottom: 1px solid var(--border); }
+.painel-materia-cabecalho > div:first-child { min-width: 0; }
+.painel-materia-cabecalho h2 { font-size: 1.4rem; margin: 0 0 6px; }
+.painel-materia-cabecalho .painel-descricao { font-size: .8rem; white-space: pre-wrap; }
+.painel-acoes { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+.painel-materias .painel-excluir { color: #bd1616; }
+.painel-materias .gestao-botao.painel-excluir { border-color: #f1c6c6; }
+.painel-ferramentas { padding: 18px 22px; }
+.painel-tabela table { width: 100%; border-collapse: collapse; text-align: left; }
+.painel-tabela th { background: var(--soft); color: var(--muted); font-size: .65rem; letter-spacing: .05em; text-transform: uppercase; padding: 17px 20px; border-top: 1px solid var(--border); }
+.painel-tabela td { padding: 18px 20px; border-top: 1px solid var(--border); font-size: .78rem; }
+.painel-tabela .coluna-ordem { color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.coluna-conteudo { width: 46%; }
+.coluna-conteudo > a { color: var(--text); font-weight: 700; text-decoration: none; }
+.coluna-conteudo > a:hover { text-decoration: underline; }
+.coluna-conteudo p { margin: 5px 0 0; color: var(--muted); font-size: .72rem; }
+.painel-tabela .coluna-acoes { white-space: nowrap; text-align: right; }
+.coluna-acoes a { display: inline-flex; align-items: center; min-height: 36px; padding: 6px; color: var(--text); text-decoration: none; font-size: .72rem; }
+.coluna-acoes a:hover { text-decoration: underline; }
+.painel-tag { display: inline-block; border-radius: 20px; padding: 4px 8px; font-size: .65rem; font-weight: 600; white-space: nowrap; }
+.nivel-facil, .status-disponivel { color: #00704c; background: #eafaf3; }
+.nivel-medio { color: #9a4b00; background: #fff5e5; }
+.nivel-avancado { color: #6633bc; background: #f3efff; }
+.painel-vazio { padding: 26px; color: var(--muted); font-size: .875rem; }
+.painel-form { padding: 28px; }
+.painel-form form { max-width: 720px; }
+.painel-disciplinas [hidden] { display: none !important; }
+html[data-theme="dark"] .painel-materias .painel-excluir { color: #ff9e9e; }
+html[data-theme="dark"] .nivel-facil, html[data-theme="dark"] .status-disponivel { background: #153d32; color: #9ce9ca; }
+html[data-theme="dark"] .nivel-medio { background: #463219; color: #ffd395; }
+html[data-theme="dark"] .nivel-avancado { background: #35254f; color: #d5bbff; }
+@media (max-width: 1150px) {
+ .painel-layout { grid-template-columns: 250px minmax(0, 1fr); gap: 18px; }
+ .painel-materia-cabecalho { flex-direction: column; gap: 16px; }
+ .painel-tabela th, .painel-tabela td { padding: 14px 12px; }
+}
+@media (max-width: 800px) {
+ .painel-materias { width: calc(100% - 32px); padding-block: 28px 40px; }
+ .painel-layout { grid-template-columns: minmax(0, 1fr); }
+ .painel-disciplinas nav { max-height: 245px; overflow-y: auto; }
+ .painel-cabecalho { flex-direction: column; gap: 16px; }
+ .painel-totais { gap: 8px; }
+ .painel-totais article { padding: 14px 12px; }
+ .painel-totais strong { font-size: 1.5rem; }
+}
+@media (max-width: 560px) {
+ .painel-totais span, .painel-totais small { font-size: .67rem; }
+ .painel-materia-cabecalho, .painel-form { padding: 20px; }
+ .painel-tabela thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+ .painel-tabela table, .painel-tabela tbody { display: block; }
+ .painel-tabela tr { display: grid; grid-template-columns: 1fr 1fr; padding: 16px 20px; gap: 12px; border-top: 1px solid var(--border); }
+ .painel-tabela td { display: block; border: 0; padding: 0; width: auto; }
+ .painel-tabela td[data-label]::before { content: attr(data-label) ': '; font-size: .72rem; color: var(--muted); }
+ .painel-tabela .coluna-ordem, .painel-tabela .coluna-conteudo, .painel-tabela .coluna-acoes { grid-column: 1 / -1; }
+ .painel-tabela .coluna-acoes { text-align: left; display: flex; gap: 16px; }
+ .coluna-acoes a { min-height: 44px; font-size: .8rem; }
+ .coluna-conteudo > a { font-size: .95rem; }
+ .painel-acoes { gap: 8px; }
+}
