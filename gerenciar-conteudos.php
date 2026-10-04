@@ -1,19 +1,35 @@
 <?php
 declare(strict_types=1);
-// ALTERADO: reúne todo o conteúdo em um formulário e salva os itens juntos, preservando seus IDs.
+// ALTERADO: usa upload nas imagens e vídeos e guarda o caminho no banco.
 require_once __DIR__ . '/includes/site/auth.php';
 require_once __DIR__ . '/includes/conteudo/dados.php';
+require_once __DIR__ . '/includes/conteudo/uploads.php';
 header('Cache-Control: no-store');
-if (!$autenticado) { header('Location: login.php', true, 303); exit; }
+$automatico = $_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['automatico'] ?? '') === '1';
+function editor_json(array $resultado, int $status = 200): never {
+ http_response_code($status); header('Content-Type: application/json; charset=utf-8');
+ echo json_encode($resultado, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE); exit;
+}
+if (!$autenticado) { if ($automatico) editor_json(['ok'=>false,'erro'=>'Sua sessão terminou. Entre novamente antes de salvar.'],401); header('Location: login.php', true, 303); exit; }
 $permitido = in_array($contaAtual['tipo_usuario'] ?? '', ['professor', 'administrador'], true);
+$pedido = is_string($_POST['pedido'] ?? null) ? $_POST['pedido'] : '';
+if ($automatico) {
+ if (!$permitido || !auth_csrf_valido()) editor_json(['ok'=>false,'erro'=>'Sua sessão expirou ou você não tem permissão para salvar.'],403);
+ if (!preg_match('/^[a-f0-9]{32}$/D', $pedido)) editor_json(['ok'=>false,'erro'=>'Solicitação inválida. Atualize a página.'],400);
+ if (isset($_SESSION['editor_pedidos'][$pedido])) {
+  $anteriorPedido = $_SESSION['editor_pedidos'][$pedido];
+  if (!hash_equals($anteriorPedido['hash'], hash('sha256', serialize($_POST)))) editor_json(['ok'=>false,'erro'=>'Solicitação repetida com dados diferentes.'],409);
+  editor_json($anteriorPedido['resultado']);
+ }
+}
 $tituloPagina = 'Conteúdos — EnsinoTec';
 $estilosPagina = ['assets/css/gerenciar-materias.css', 'assets/css/editor-conteudo.css'];
 $esquema = [
- 'resumos' => ['resumo','id_resumo','id_conteudo','Imagem e resumo', ['descricao'=>['Resumo','textarea',255], 'caminho_imagem'=>['Link da imagem ou caminho do arquivo','media',255]]],
- 'videos' => ['video','id_video','id_conteudo','Vídeo', ['titulo'=>['Título do vídeo','text',150], 'url_video'=>['Link do vídeo ou caminho do arquivo','media',255]]],
+ 'resumos' => ['resumo','id_resumo','id_conteudo','Imagem e resumo', ['descricao'=>['Resumo','textarea',255], 'caminho_imagem'=>['Enviar imagem','media',255]]],
+ 'videos' => ['video','id_video','id_conteudo','Vídeo', ['titulo'=>['Título do vídeo','text',150], 'url_video'=>['Enviar vídeo','media',255]]],
  'questoes' => ['exercicio','id_exercicio','id_conteudo','Questão', ['pergunta'=>['Enunciado','textarea',15000]]],
  'alternativas' => ['alternativa','id_alternativa','id_exercicio','Alternativa', ['texto'=>['Texto da alternativa','textarea',255], 'correta'=>['Resposta correta','checkbox',1]]],
- 'imagens' => ['imagem_exercicio','id_imagem','id_exercicio','Imagem da questão', ['caminho_arquivo'=>['Link da imagem ou caminho do arquivo','media',255], 'legenda'=>['Legenda','text',255], 'ordem'=>['Ordem','number',100000]]],
+ 'imagens' => ['imagem_exercicio','id_imagem','id_exercicio','Imagem da questão', ['caminho_arquivo'=>['Enviar imagem','media',255], 'legenda'=>['Legenda','text',255], 'ordem'=>['Ordem','number',100000]]],
 ];
 function editor_id($v): int { return (int) (filter_var($v, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]) ?: 0); }
 function editor_texto($v): string { return is_string($v) ? trim($v) : ''; }
@@ -40,14 +56,15 @@ function editor_lista($lista, string $tipo, array $atuais, array $esquema): arra
  if (!is_array($lista)) throw new DomainException('Formulário incompleto. Recarregue a página.');
  [$t,$pk,$fk,$rotulo,$campos]=$esquema[$tipo];
  $mapa=array_column($atuais,null,$pk); $vistos=[]; $saida=[];
- foreach ($lista as $linha) {
+ foreach ($lista as $chave=>$linha) {
+  if (!preg_match('/^[0-9]+$/D', (string)$chave)) throw new DomainException('Índice de item inválido.');
   if (!is_array($linha)) throw new DomainException('Item inválido.');
   $id=editor_id($linha[$pk]??null); $antigo=$mapa[$id]??[];
   if ($id && (!$antigo || isset($vistos[$id]))) throw new DomainException('Um item não pertence a este conteúdo ou está repetido.');
   $vistos[$id]=true;
   $remover=editor_texto($linha['remover']??'')==='1';
-  if ($remover) { if ($id) $saida[] = [$pk=>$id,'remover'=>true]; continue; }
-  $dados=[$pk=>$id]; $vazio=true;
+  if ($remover) { $saida[] = [$pk=>$id,'remover'=>true,'_chave'=>$chave]; continue; }
+  $dados=[$pk=>$id,'_chave'=>$chave]; $vazio=true;
   foreach ($campos as $nome=>[$label,$controle,$limite]) {
    $valor=editor_texto($linha[$nome]??'');
    if ($controle==='checkbox') $valor=$valor==='1' ? 1 : 0;
@@ -74,12 +91,14 @@ function editor_lista($lista, string $tipo, array $atuais, array $esquema): arra
  }
  return $saida;
 }
-function editor_gravar(PDO $pdo, int $pai, string $tipo, array $itens, array $esquema): void {
+function editor_gravar(PDO $pdo, int $pai, string $tipo, array $itens, array $esquema, string $prefixo, array &$ids, array &$removidos): void {
  [$t,$pk,$fk,$rotulo,$campos]=$esquema[$tipo];
  foreach ($itens as $item) {
+  $nome=$prefixo.'['.$item['_chave'].']';
   $id=$item[$pk];
   if (!empty($item['remover'])) {
-   $q=$pdo->prepare("DELETE FROM $t WHERE $pk=? AND $fk=?"); $q->execute([$id,$pai]); continue;
+   if ($id) { $q=$pdo->prepare("DELETE FROM $t WHERE $pk=? AND $fk=?"); $q->execute([$id,$pai]); }
+   $removidos[]=$nome.'['.$pk.']'; continue;
   }
   $dados=array_intersect_key($item,$campos);
   if ($id) {
@@ -89,7 +108,8 @@ function editor_gravar(PDO $pdo, int $pai, string $tipo, array $itens, array $es
    $dados[$fk]=$pai; $colunas=implode(', ',array_keys($dados)); $marcas=implode(', ',array_fill(0,count($dados),'?'));
    $q=$pdo->prepare("INSERT INTO $t ($colunas) VALUES ($marcas)"); $q->execute(array_values($dados)); $id=(int)$pdo->lastInsertId();
   }
-  if ($tipo==='questoes') foreach (['alternativas','imagens'] as $sub) editor_gravar($pdo,$id,$sub,$item[$sub],$esquema);
+  $ids[$nome.'['.$pk.']']=$id;
+  if ($tipo==='questoes') foreach (['alternativas','imagens'] as $sub) editor_gravar($pdo,$id,$sub,$item[$sub],$esquema,$nome.'['.$sub.']',$ids,$removidos);
  }
 }
 function editor_campo(string $prefixo,string $nome,array $spec,$valor): void {
@@ -98,7 +118,17 @@ function editor_campo(string $prefixo,string $nome,array $spec,$valor): void {
  ?>
  <?php if ($tipo==='checkbox'): ?><label class="gestao-check"><input type="checkbox" name="<?= site_escape($prefixo.'['.$nome.']') ?>" value="1" <?= (string)$valor==='1'?'checked':'' ?>><?= site_escape($label) ?></label>
  <?php else: ?><label for="<?= site_escape($id) ?>"><?= site_escape($label) ?></label>
- <?php if ($tipo==='textarea'): ?><textarea id="<?= site_escape($id) ?>" name="<?= site_escape($prefixo.'['.$nome.']') ?>" maxlength="<?= $max ?>" rows="3"><?= site_escape((string)$valor) ?></textarea>
+ <?php if ($tipo==='media'): $midiaTipo=$nome==='url_video'?'video':'imagem'; $urlAtual=url_midia((string)$valor); ?>
+ <div class="editor-upload" data-tipo="<?= $midiaTipo ?>" data-limite="<?= upload_limite($midiaTipo) ?>">
+ <input type="hidden" name="<?= site_escape($prefixo.'['.$nome.']') ?>" value="<?= site_escape((string)$valor) ?>" data-upload-caminho>
+ <input type="file" id="<?= site_escape($id) ?>" accept="<?= $midiaTipo==='video'?'video/mp4,video/webm':'image/jpeg,image/png,image/webp,image/gif' ?>" data-upload-arquivo>
+ <small><?= $midiaTipo==='video'?'MP4 ou WebM':'JPG, PNG, WebP ou GIF' ?> · Até <?= number_format(upload_limite($midiaTipo)/1048576,1,',','.') ?> MB por arquivo.</small>
+ <p data-upload-status role="status"><?= $valor!==''?'Arquivo já vinculado. Selecione outro para substituir.':'Selecione um arquivo do seu dispositivo.' ?></p>
+ <a data-upload-preview <?= !$urlAtual?'hidden':'' ?> href="<?= site_escape($urlAtual??'#') ?>" target="_blank" rel="noopener noreferrer">Abrir arquivo atual ↗</a>
+ <button type="button" class="gestao-botao" data-upload-cancelar hidden>Cancelar envio</button>
+ <noscript>Ative o JavaScript para enviar arquivos.</noscript>
+ </div>
+ <?php elseif ($tipo==='textarea'): ?><textarea id="<?= site_escape($id) ?>" name="<?= site_escape($prefixo.'['.$nome.']') ?>" maxlength="<?= $max ?>" rows="3"><?= site_escape((string)$valor) ?></textarea>
  <?php else: ?><input id="<?= site_escape($id) ?>" name="<?= site_escape($prefixo.'['.$nome.']') ?>" type="<?= $tipo==='number'?'number':'text' ?>" value="<?= site_escape((string)$valor) ?>" <?= $tipo==='number'?'min="1" max="'.$max.'"':'maxlength="'.$max.'"' ?>><?php endif; ?>
  <?php endif;
 }
@@ -141,6 +171,7 @@ else try {
    if (!auth_csrf_valido()) { http_response_code(403); throw new DomainException('O formulário expirou. Atualize a página.'); }
    if (editor_texto($_POST['completo']??'')!=='sim') throw new DomainException('O formulário chegou incompleto. Nenhuma alteração foi salva. Reduza a quantidade de itens por envio ou ajuste o limite de formulários do PHP.');
    $acao=editor_texto($_POST['acao']??'');
+   if ($automatico && $acao !== 'salvar') throw new DomainException('A exclusão do conteúdo precisa de confirmação.');
    if (!in_array($acao,['salvar','excluir'],true) || ($acao==='excluir' && (!$excluir || !$id || editor_texto($_POST['confirmar']??'')!=='sim')) || ($acao==='salvar' && $excluir)) throw new DomainException('Ação inválida ou exclusão não confirmada.');
    $enviado=is_array($_POST['conteudo']??null)?$_POST['conteudo']:[];
    $revisao=editor_texto($_POST['revisao']??'');
@@ -168,9 +199,21 @@ else try {
     if ($id) { $q=$pdo->prepare('UPDATE conteudo SET titulo=?,texto=?,id_materia=?,ordem=?,nivel_dificuldade=? WHERE id_conteudo=?'); $q->execute([$titulo,$texto,$destino,$ordem,$nivel,$id]); }
     else { $q=$pdo->prepare('INSERT INTO conteudo (titulo,texto,id_materia,ordem,nivel_dificuldade) VALUES (?,?,?,?,?)'); $q->execute([$titulo,$texto,$destino,$ordem,$nivel]); }
     $idSalvo=$id ?: (int)$pdo->lastInsertId();
-    foreach ($colecoes as $tipo=>$itens) editor_gravar($pdo,$idSalvo,$tipo,$itens,$esquema);
+    $idsSalvos=[]; $itensRemovidos=[];
+    foreach ($colecoes as $tipo=>$itens) editor_gravar($pdo,$idSalvo,$tipo,$itens,$esquema,'conteudo['.$tipo.']',$idsSalvos,$itensRemovidos);
+    $q=$pdo->prepare('SELECT COUNT(*) FROM exercicio WHERE id_conteudo=?'); $q->execute([$idSalvo]);
+    if ((int)$q->fetchColumn() < 5) throw new DomainException('Cada conteúdo deve conter pelo menos 5 questões preenchidas. Complete as questões antes de salvar.');
+    $novaRevisao=editor_revisao(editor_ler($pdo,$idSalvo,$esquema));
+    if ($automatico) { $q=$pdo->prepare('SELECT id_conteudo,titulo FROM conteudo WHERE id_materia=? ORDER BY ordem,id_conteudo'); $q->execute([$destino]); $listaAtualizada=$q->fetchAll(); }
    }
-   $pdo->commit(); $_SESSION['conteudos_aviso']=$acao==='excluir'?'Conteúdo excluído.':'Conteúdo completo salvo.';
+   $pdo->commit();
+   if ($automatico) {
+    $resultado=['ok'=>true,'id'=>$idSalvo,'materia'=>$destino,'revisao'=>$novaRevisao,'ids'=>$idsSalvos,'removidos'=>$itensRemovidos,'titulo'=>$titulo,'lista'=>$listaAtualizada,'mensagem'=>$id?'editado com sucesso':'criado com sucesso'];
+    $_SESSION['editor_pedidos'][$pedido]=['hash'=>hash('sha256',serialize($_POST)),'resultado'=>$resultado];
+    while (count($_SESSION['editor_pedidos'])>20) array_shift($_SESSION['editor_pedidos']);
+    editor_json($resultado);
+   }
+   $_SESSION['conteudos_aviso']=$acao==='excluir'?'excluído com sucesso':($id?'editado com sucesso':'criado com sucesso');
    header('Location: gerenciar-conteudos.php?id_materia='.$destino.($acao==='salvar'?'&editar='.$idSalvo:''),true,303); exit;
   } catch (DomainException $e) { if ($pdo->inTransaction()) $pdo->rollBack(); $erro=$e->getMessage(); }
   catch (PDOException $e) { if ($pdo->inTransaction()) $pdo->rollBack(); error_log('[EnsinoTec] Editor: '.$e->getCode()); http_response_code(503); $erro='Não foi possível salvar. Nenhuma alteração foi aplicada. Tente novamente.'; }
@@ -178,13 +221,14 @@ else try {
  $q=$pdo->prepare('SELECT id_conteudo,titulo FROM conteudo WHERE id_materia=? ORDER BY ordem,id_conteudo'); $q->execute([$pai]); $lista=$q->fetchAll();
 } catch (DomainException $e) { http_response_code(404); $erro=$e->getMessage(); }
 catch (PDOException $e) { http_response_code(503); error_log('[EnsinoTec] Editor: '.$e->getCode()); $erro='Não foi possível carregar os conteúdos.'; }
+if ($automatico) editor_json(['ok'=>false,'erro'=>$erro ?: 'Não foi possível salvar.'], http_response_code() >= 400 ? http_response_code() : 422);
 require __DIR__.'/includes/site/header.php';
 ?>
 <main class="gestao editor-pagina" id="conteudo-principal" tabindex="-1">
 <?php if (!$permitido): ?><h1>Acesso restrito</h1><p>Somente professores e administradores podem gerenciar conteúdos.</p>
 <?php else: ?>
-<header class="gestao-intro"><p>EnsinoTec · Área de ensino</p><h1><?= $id?'Editar conteúdo':'Adicionar conteúdo' ?></h1><p>Texto, resumos, imagens, vídeos e questões no mesmo lugar.</p><div class="gestao-acoes"><a class="gestao-botao" href="gerenciar-materias.php">Voltar às matérias</a><?php if ($id): ?><a class="gestao-botao" href="conteudo.php?id_conteudo=<?= $id ?>">Ver página</a><?php endif; ?></div></header>
-<?php if ($aviso): ?><p class="gestao-aviso" role="status"><?= site_escape($aviso) ?></p><?php endif; ?>
+<header class="gestao-intro"><p class="editor-etiqueta">EnsinoTec · Área de ensino</p><h1><?= $id?'Editar conteúdo':'Adicionar conteúdo' ?></h1><p>Organize sua aula: explicação, resumos, imagens, vídeos e questões.</p><div class="gestao-acoes"><a class="gestao-botao" href="gerenciar-materias.php?id_materia=<?= $pai ?>">← Voltar às matérias</a><a class="gestao-botao" id="editor-ver-pagina" <?= !$id?'hidden':'' ?> href="conteudo.php?id_conteudo=<?= $id ?>">Ver página ↗</a></div></header>
+<?php if ($aviso): ?><p class="gestao-aviso" role="status" data-popup-aviso><?= site_escape($aviso) ?></p><?php endif; ?>
 <?php if ($erro): ?><p class="gestao-aviso" role="alert"><?= site_escape($erro) ?></p><?php endif; ?>
 <?php if ($pronto): ?>
 <div class="editor-layout"><section class="gestao-card">
@@ -194,23 +238,30 @@ require __DIR__.'/includes/site/header.php';
 <?php else: ?>
 <form method="post" id="editor-form" action="<?= site_escape($url.($id?'&editar='.$id:'')) ?>">
 <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>"><input type="hidden" name="revisao" value="<?= site_escape($revisao) ?>"><input type="hidden" name="acao" value="salvar">
+<div class="editor-salvamento"><p id="editor-status" role="status" aria-live="polite">Use “Salvar conteúdo” para gravar suas alterações.</p><button class="gestao-botao principal" type="submit">Salvar conteúdo</button></div>
+<div class="editor-dados">
 <h2>Informações do conteúdo</h2>
-<?php editor_campo('conteudo','titulo',['Título','text',150],editor_texto($dados['titulo']??'')); ?>
+<div class="editor-campo editor-campo-titulo"><?php editor_campo('conteudo','titulo',['Título','text',150],editor_texto($dados['titulo']??'')); ?></div>
+<div class="editor-campo">
 <label for="materia-editor">Matéria</label><select id="materia-editor" name="conteudo[id_materia]" required><?php foreach ($materias as $m): ?><option value="<?= (int)$m['id_materia'] ?>" <?= (int)$m['id_materia']===editor_id($dados['id_materia']??null)?'selected':'' ?>><?= site_escape($m['titulo']) ?></option><?php endforeach; ?></select>
-<?php editor_campo('conteudo','ordem',['Ordem','number',100000],$dados['ordem']??1); ?>
+</div><div class="editor-campo"><?php editor_campo('conteudo','ordem',['Ordem','number',100000],$dados['ordem']??1); ?></div><div class="editor-campo">
 <label for="nivel-editor">Dificuldade</label><select id="nivel-editor" name="conteudo[nivel_dificuldade]"><?php foreach (['facil'=>'Fácil','medio'=>'Médio','avancado'=>'Avançado'] as $k=>$v): ?><option value="<?= $k ?>" <?= ($dados['nivel_dificuldade']??'')===$k?'selected':'' ?>><?= $v ?></option><?php endforeach; ?></select>
+</div>
+</div>
 <section class="editor-secao"><h2>Resumos e imagens</h2><p class="gestao-meta">Cada resumo aceita até 255 caracteres. A imagem é opcional.</p><?php editor_itens('resumos','conteudo[resumos]',is_array($dados['resumos']??null)?$dados['resumos']:[],$esquema); ?></section>
 <section class="editor-secao"><h2>Explicação</h2><?php editor_campo('conteudo','texto',['Texto da explicação','textarea',100000],editor_texto($dados['texto']??'')); ?></section>
-<section class="editor-secao"><h2>Vídeos</h2><p class="gestao-meta">Use links ou caminhos de arquivos já existentes no site.</p><?php editor_itens('videos','conteudo[videos]',is_array($dados['videos']??null)?$dados['videos']:[],$esquema); ?></section>
-<section class="editor-secao"><h2>Questões</h2><?php editor_itens('questoes','conteudo[questoes]',is_array($dados['questoes']??null)?$dados['questoes']:[],$esquema); ?></section>
-<p class="gestao-meta">Itens novos em branco são ignorados. Os itens marcados para remoção serão excluídos somente ao salvar.</p>
+<section class="editor-secao"><h2>Vídeos</h2><p class="gestao-meta">Envie um vídeo do seu dispositivo para usar nesta aula.</p><?php editor_itens('videos','conteudo[videos]',is_array($dados['videos']??null)?$dados['videos']:[],$esquema); ?></section>
+<section class="editor-secao"><h2>Questões</h2><p class="gestao-meta">Obrigatório: pelo menos 5 questões preenchidas. O salvamento automático começa quando esse mínimo for atendido.</p><p id="editor-questoes-status" class="gestao-meta" role="status" aria-live="polite"></p><?php $questoesEditor=is_array($dados['questoes']??null)?$dados['questoes']:[]; editor_itens('questoes','conteudo[questoes]',array_pad($questoesEditor,max(5,count($questoesEditor)),[]),$esquema); ?></section>
+<p class="gestao-meta">Itens novos em branco são ignorados. Ao remover um item, confirme a exclusão.</p>
 <input type="hidden" name="completo" value="sim">
 <div class="gestao-acoes"><button class="gestao-botao principal" type="submit">Salvar conteúdo</button><a class="gestao-botao" href="<?= site_escape($url) ?>">Cancelar</a></div>
 </form>
 <?php foreach (array_keys($esquema) as $tipo): ?><template id="modelo-<?= $tipo ?>"><?php editor_item($tipo,'__PREFIX__',[],$esquema); ?></template><?php endforeach; ?>
 <script src="assets/js/editor-conteudo.js" defer></script>
+<script src="assets/js/upload-conteudo.js" defer></script>
 <?php endif; ?></section>
 <aside class="gestao-card editor-lista"><h2>Conteúdos da matéria</h2><a class="gestao-botao" href="<?= site_escape($url) ?>">Novo conteúdo</a><?php foreach ($lista as $item): ?><article><h3><?= site_escape($item['titulo']) ?></h3><div class="gestao-acoes"><a class="gestao-botao" href="<?= site_escape($url.'&editar='.(int)$item['id_conteudo']) ?>">Editar</a><a class="gestao-botao" href="<?= site_escape($url.'&excluir='.(int)$item['id_conteudo']) ?>">Excluir</a></div></article><?php endforeach; ?></aside>
 </div><?php endif; ?>
 <?php endif; ?></main>
+<?php $popupSucesso=$permitido?$aviso:''; require __DIR__ . '/includes/site/popup-sucesso.php'; ?>
 <?php require __DIR__.'/includes/site/footer.php'; ?>
