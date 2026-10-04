@@ -1,4 +1,4 @@
-/* NOVO: formulários e respostas de professor com suporte aos dois temas. */
+/* ALTERADO: exibe a confirmação de desfazer em um pop-up centralizado. */
 .professor-area { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 24px; }
 .professor-area h2 { font-size: 1.2rem; color: var(--wine); margin: 0 0 14px; }
 .pagina-perfil .professor-area p { margin-bottom: 16px; line-height: 1.7; }
@@ -22,3 +22,10 @@
 .admin-opcoes .admin-link { margin-top: 20px; }
 html[data-theme="dark"] .pedido-botao:not(.pedido-secundario) { background: #a51d35; border-color: #a51d35; }
 @media (max-width: 480px) { .pedido-acoes { flex-direction: column; } .pedido-filtros .admin-link { flex: 1; } }
+
+.pedido-confirmacao { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; width: min(520px, calc(100vw - 32px)); max-height: calc(100svh - 40px); overflow-y: auto; padding: clamp(22px, 4vw, 32px); border: 1px solid var(--border); border-top: 4px solid var(--wine); border-radius: 20px; background: var(--surface, #fff); color: var(--text); box-shadow: 0 24px 80px #0004; }
+.pedido-confirmacao::backdrop { background: #10131a99; backdrop-filter: blur(3px); }
+.pedido-confirmacao h3 { margin: 0 0 14px; font-size: 1.35rem; }
+.pedido-confirmacao p { color: var(--muted); line-height: 1.65; }
+.pedido-confirmacao .pedido-acoes { margin-bottom: 0; }
+.pedido-confirmacao [aria-disabled="true"] { opacity: .7; cursor: wait; }
