@@ -1,61 +1,279 @@
-/* ALTERADO: isola o visual original do perfil para preservar a navbar e o footer. */
-.pagina-perfil {
+/* ALTERADO: exibe a foto circular e organiza o formulário de envio. */
+.conta-pagina {
     flex: 1;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    background: var(--soft, #f4f6f8);
+    color: var(--text);
+    padding: 40px 0 64px;
+}
+
+.conta-container {
+    width: min(1080px, calc(100% - 40px));
+    margin: auto;
+}
+
+.conta-voltar {
+    display: inline-block;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 0;
+    font-size: .9rem;
+}
+
+.conta-cabecalho {
+    margin: 24px 0 30px;
+}
+
+.conta-etiqueta {
+    color: var(--wine);
+    font-size: .72rem;
+    letter-spacing: .12em;
+    font-weight: 700;
+}
+
+.conta-cabecalho h1 {
+    margin: 8px 0 10px;
+    font-size: clamp(28px, 3vw, 36px);
+    letter-spacing: -.025em;
+}
+
+.conta-cabecalho p,
+.conta-titulo p {
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.conta-grade {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.conta-identidade,
+.conta-cartao {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface, #fff);
+    box-shadow: 0 4px 16px #00000004;
+}
+
+.conta-identidade {
+    overflow: hidden;
+    padding: 0 24px 26px;
+    text-align: center;
+}
+
+.conta-capa {
+    height: 88px;
+    margin: 0 -24px;
+    background: linear-gradient(120deg, #650014, #a51d35);
+}
+
+.conta-avatar {
+    position: relative;
+    margin: -36px auto 18px;
+    width: 80px;
+    height: 80px;
+    border: 5px solid var(--surface, #fff);
+    border-radius: 50%;
+    background: var(--soft);
+    color: var(--wine);
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.conta-identidade h2 {
+    font-size: 1.25rem;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+}
+
+.conta-selo {
+    display: inline-block;
+    background: var(--soft);
+    color: var(--wine);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.conta-identidade p {
+    color: var(--muted);
+    font-size: .85rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    margin: 16px 0 24px;
+}
+
+.conta-primario,
+.conta-secundario {
+    display: inline-flex;
     align-items: center;
-    padding: 40px 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f6f8;
-    color: #212529;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 10px;
+    padding: 12px 18px;
+    min-height: 46px;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.conta-primario {
+    background: #940000;
+    color: #fff;
+    border: 1px solid #940000;
+}
+
+.conta-primario:hover {
+    background: #730000;
+}
+
+.conta-secundario {
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: var(--surface, #fff);
+}
+
+.conta-identidade>a {
+    display: flex;
+    margin-top: 10px;
+}
+
+.conta-detalhes {
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+}
+
+.conta-cartao {
+    padding: 28px;
+    min-width: 0;
+}
+
+.conta-titulo {
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+}
+
+.conta-titulo h2 {
+    font-size: 1.15rem;
+    margin: 0 0 7px;
+}
+
+.conta-titulo p {
+    font-size: .9rem;
+}
+
+.conta-dados {
+    margin: 0;
+    display: grid;
+    gap: 22px;
+}
+
+.conta-dados dt {
+    color: var(--muted);
+    font-size: .8rem;
+    margin-bottom: 7px;
+}
+
+.conta-dados dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-weight: 500;
+}
+
+.conta-cartao .professor-area {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.conta-cartao .professor-area h2 {
+    color: var(--text);
+    margin: 0 0 16px;
+}
+
+.conta-cartao .professor-area p {
+    line-height: 1.7;
+}
+
+.conta-erro {
+    padding: 14px 16px;
+    border: 1px solid var(--wine);
+    border-radius: 10px;
+    color: var(--wine);
+    background: var(--soft);
     line-height: 1.5;
 }
-.pagina-perfil *, .pagina-perfil *::before, .pagina-perfil *::after { box-sizing: border-box; }
-.pagina-perfil h1, .pagina-perfil p { margin: 0; }
-.pagina-perfil .container {
-    width: 700px;
-    min-height: 500px;
-    padding: 30px 40px;
-    background: #fff;
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgb(0 0 0 / 8%);
+
+@media(max-width:760px) {
+    .conta-grade {
+        grid-template-columns: 1fr;
+    }
+
+    .conta-container {
+        width: calc(100% - 32px);
+    }
+
+    .conta-pagina {
+        padding-top: 24px;
+    }
+
+    .conta-cartao {
+        padding: 22px;
+    }
 }
-.pagina-perfil .btn-voltar {
-    padding: 10px 16px;
-    background: transparent;
-    color: #333;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: .2s;
-}
-.pagina-perfil .btn-voltar:hover { background: #f0f0f0; }
-.pagina-perfil .perfil { margin-top: 25px; display: flex; flex-direction: column; align-items: center; }
-.pagina-perfil .foto {
-    width: 130px;
-    height: 130px;
+
+.conta-avatar {
     overflow: hidden;
-    border-radius: 50%;
-    background: #e0e0e0;
-    box-shadow: 0 5px 15px rgb(0 0 0 / 12%);
 }
-.pagina-perfil .foto img { width: 100%; height: 100%; object-fit: cover; }
-.pagina-perfil .perfil-avatar { width: 100%; height: 100%; padding: 12px; fill: #858585; stroke: none; }
-.pagina-perfil .informacoes { width: 100%; max-width: 500px; margin-top: 25px; min-width: 0; }
-.pagina-perfil .informacoes h1 { margin-bottom: 30px; font-size: 32px; font-weight: 700; color: #212529; text-align: center; line-height: 1.2; }
-.pagina-perfil .campo { margin-bottom: 24px; }
-.pagina-perfil .label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: .5px; }
-.pagina-perfil .campo p { padding: 12px 15px; background: #f8f9fa; border: 1px solid #e1e5e9; border-radius: 8px; font-size: 16px; color: #343a40; overflow-wrap: anywhere; }
-html[data-theme="dark"] .pagina-perfil { background: var(--night); color: var(--text); }
-html[data-theme="dark"] .pagina-perfil .btn-voltar:hover { background: var(--soft); }
-@media (max-width: 750px) {
-    .pagina-perfil .container { width: 90%; min-height: auto; padding: 25px; }
+
+.conta-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-@media (max-width: 480px) {
-    .pagina-perfil .container { width: 95%; padding: 20px; }
-    .pagina-perfil .foto { width: 110px; height: 110px; }
-    .pagina-perfil .informacoes h1 { font-size: 26px; }
+
+.editar-perfil .conta-foto-form {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: left;
+}
+
+.conta-foto-form label {
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+.conta-foto-form input[type="file"] {
+    width: 100%;
+    min-width: 0;
+    font: inherit;
+    font-size: .8rem;
+}
+
+.conta-foto-form input::file-selector-button {
+    padding: 10px;
+    margin-right: 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--soft);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.conta-foto-form #foto-ajuda {
+    margin: 0;
+    font-size: .75rem;
 }
