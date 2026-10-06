@@ -1,7 +1,21 @@
-// ALTERADO: aguarda os uploads antes de salvar os caminhos no banco.
+// ALTERADO: mostra um pop-up ao ativar ou desativar o salvamento automático.
 (() => {
   const form = document.getElementById('editor-form');
-  if (!form || !window.fetch || !window.crypto?.getRandomValues) return;
+  if (!form || !window.fetch || !window.crypto ? .getRandomValues) return;
+  const materia = document.getElementById('materia-editor');
+  const subdivisao = document.getElementById('subdivisao-editor');
+  const filtrarSubdivisoes = () => {
+    if (!materia || !subdivisao) return;
+    [...subdivisao.options].forEach(option => {
+      const pertence = !option.value || option.dataset.materia === materia.value;
+      option.hidden = !pertence;
+      option.disabled = !pertence;
+      if (!pertence && option.selected) subdivisao.value = '';
+    });
+    document.getElementById('gerenciar-subdivisoes').href = 'gerenciar-subdivisoes.php?id_materia=' + encodeURIComponent(materia.value);
+  };
+  materia ? .addEventListener('change', filtrarSubdivisoes);
+  filtrarSubdivisoes();
   const status = document.getElementById('editor-status');
   const revision = form.elements.namedItem('revisao');
   const buttons = [...form.querySelectorAll('button[type="submit"]')];
@@ -12,26 +26,63 @@
     if (questionStatus) questionStatus.textContent = total + ' questão(ões) preenchida(s).' + (total < 5 ? ' Faltam ' + (5 - total) + ' para salvar.' : ' Mínimo obrigatório atendido.');
     return total;
   };
-  let next = Date.now(), timer, version = 0, saved = 0, busy = false, pending = null;
+  let next = Date.now(),
+    timer, version = 0,
+    saved = 0,
+    busy = false,
+    pending = null;
   const message = (text, state = '') => {
     status.textContent = text;
     status.dataset.state = state;
   };
-  message('Salvamento automático ativado.');
+  let autoSave = true;
+  try {
+    autoSave = localStorage.getItem('ensinotec.editor.autosave') !== 'off';
+  } catch {}
+  const toggle = document.createElement('input');
+  toggle.type = 'checkbox';
+  toggle.id = 'editor-autosave';
+  toggle.checked = autoSave;
+  const label = document.createElement('label');
+  label.className = 'editor-autosave';
+  label.append(toggle, document.createTextNode('Salvar automaticamente'));
+  const controls = document.createElement('div');
+  controls.className = 'editor-salvamento-info';
+  status.before(controls);
+  controls.append(label, status);
+  const manualMessage = 'Salvamento automático desativado. Use “Salvar agora”.';
+  message(autoSave ? 'Salvamento automático ativado.' : manualMessage);
+  toggle.addEventListener('change', () => {
+    autoSave = toggle.checked;
+    window.siteSucesso ? .(autoSave ? 'Salvamento automático ativado.' : 'Salvamento automático desativado.');
+    try {
+      localStorage.setItem('ensinotec.editor.autosave', autoSave ? 'on' : 'off');
+    } catch {}
+    clearTimeout(timer);
+    if (busy) message('Concluindo o salvamento já iniciado. ' + (autoSave ? '' : 'Próximas alterações serão manuais.'), 'saving');
+    else if (!autoSave) message(manualMessage, version !== saved || pending ? 'pending' : '');
+    else if (version !== saved || pending) {
+      message('Alterações pendentes…', 'pending');
+      timer = setTimeout(save, 1000);
+    } else message('Salvamento automático ativado.');
+  });
   countQuestions();
   buttons.forEach(button => button.textContent = 'Salvar agora');
   const schedule = () => {
     version++;
     countQuestions();
     clearTimeout(timer);
-    message('Alterações pendentes…', 'pending');
-    timer = setTimeout(save, 1000);
+    message(autoSave ? 'Alterações pendentes…' : 'Alterações não salvas. Clique em “Salvar agora”.', 'pending');
+    if (autoSave) timer = setTimeout(save, 1000);
   };
-  form.addEventListener('input', schedule);
+  form.addEventListener('input', event => {
+    if (event.target !== toggle) schedule();
+  });
   form.addEventListener('change', event => {
     const field = event.target;
+    if (field === toggle) return;
     if (field.matches('.editor-remover input') && field.checked) {
-      if (!confirm('Excluir este item e seus itens vinculados? A remoção será salva automaticamente.')) {
+      if (!confirm('Excluir este item e seus itens vinculados?' + (autoSave ? ' A remoção será salva automaticamente.' : ' A remoção será aplicada ao clicar em “Salvar agora”.'))) {
         field.checked = false;
         countQuestions();
         return;
@@ -50,7 +101,7 @@
     });
     const first = fragment.querySelector('textarea, input:not([type="hidden"])');
     collection.querySelector(':scope > [data-items]').append(fragment);
-    if (focus) first?.focus();
+    if (focus) first ? .focus();
   };
   form.addEventListener('click', event => {
     const button = event.target.closest('[data-add]');
@@ -58,7 +109,8 @@
     addItem(button.closest('[data-collection]'), true);
     schedule();
   });
-  async function save() {
+  async function save(manual = false) {
+    if (!manual && !autoSave) return;
     clearTimeout(timer);
     if (busy || (!pending && version === saved)) return;
     if (form.querySelector('[data-upload-state="enviando"], [data-upload-state="erro"]')) {
@@ -78,7 +130,11 @@
       body.set('automatico', '1');
       const bytes = crypto.getRandomValues(new Uint8Array(16));
       body.set('pedido', [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join(''));
-      pending = { body, version, action: form.action };
+      pending = {
+        body,
+        version,
+        action: form.action
+      };
     }
     const attempt = pending;
     busy = true;
@@ -89,22 +145,30 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
     try {
-      const response = await fetch(attempt.action, { method: 'POST', body: attempt.body, credentials: 'same-origin', signal: controller.signal, headers: { Accept: 'application/json' } });
-      if (!response.headers.get('content-type')?.includes('application/json')) {
+      const response = await fetch(attempt.action, {
+        method: 'POST',
+        body: attempt.body,
+        credentials: 'same-origin',
+        signal: controller.signal,
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+      if (!response.headers.get('content-type') ? .includes('application/json')) {
         throw new Error('Não foi possível confirmar o salvamento. Confira sua conexão e sessão e tente “Salvar agora”.');
       }
       const result = await response.json();
       if (!response.ok || !result.ok) {
         pending = null;
         message(result.erro || 'Não foi possível salvar. Tente novamente.', 'error');
-        if (version > attempt.version) timer = setTimeout(save, 500);
+        if (autoSave && version > attempt.version) timer = setTimeout(save, 500);
         return;
       }
       for (const [name, id] of Object.entries(result.ids)) {
         const field = form.elements.namedItem(name);
         if (field) field.value = id;
       }
-      for (const name of result.removidos) form.elements.namedItem(name)?.closest('.editor-item')?.remove();
+      for (const name of result.removidos) form.elements.namedItem(name) ? .closest('.editor-item') ? .remove();
       form.querySelectorAll('[data-collection]').forEach(collection => {
         if (!collection.querySelector(':scope > [data-items] > .editor-item')) addItem(collection);
       });
@@ -128,7 +192,10 @@
         title.textContent = item.titulo;
         const actions = document.createElement('div');
         actions.className = 'gestao-acoes';
-        for (const [action, label] of [['editar', 'Editar'], ['excluir', 'Excluir']]) {
+        for (const [action, label] of [
+            ['editar', 'Editar'],
+            ['excluir', 'Excluir']
+          ]) {
           const link = document.createElement('a');
           link.className = 'gestao-botao';
           link.href = 'gerenciar-conteudos.php?id_materia=' + result.materia + '&' + action + '=' + item.id_conteudo;
@@ -140,11 +207,14 @@
       }
       saved = attempt.version;
       pending = null;
-      window.siteSucesso?.(result.mensagem);
-      message('Todas as alterações salvas às ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}), 'saved');
+      window.siteSucesso ? .(result.mensagem);
+      message('Todas as alterações salvas às ' + new Date().toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }) + (autoSave ? '' : '. Salvamento automático desativado.'), 'saved');
       if (version > saved) {
-        message('Salvo. Há novas alterações aguardando…', 'pending');
-        timer = setTimeout(save, 500);
+        message(autoSave ? 'Salvo. Há novas alterações aguardando…' : 'Há novas alterações não salvas. Clique em “Salvar agora”.', 'pending');
+        if (autoSave) timer = setTimeout(save, 500);
       }
     } catch (error) {
       message(error.name === 'AbortError' ? 'A conexão demorou. Clique em “Salvar agora” para confirmar o salvamento.' : error.message, 'error');
@@ -158,7 +228,7 @@
   form.addEventListener('submit', event => {
     event.preventDefault();
     if (version === saved && !pending) version++;
-    save();
+    save(true);
   });
   window.addEventListener('beforeunload', event => {
     if (version !== saved || busy || pending) {
