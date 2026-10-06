@@ -1,6 +1,12 @@
 /* ALTERADO: usa as cores e o cartão translúcido do login, mantendo a estrutura. */
-.register-page .login-header { padding-block: 20px; }
-.register-page .login-main { padding-top: 16px; }
+.register-page .login-header {
+    padding-block: 20px;
+}
+
+.register-page .login-main {
+    padding-top: 16px;
+}
+
 .register-card {
     width: min(100%, 460px);
     padding: 34px 32px 28px;
@@ -9,17 +15,30 @@
 
 
 }
-.register-card h1 { font-size: 1.65rem; }
-.register-card .login-subtitle { color: #f0d5dc; margin-bottom: 28px; }
-.register-card .field { margin-bottom: 18px; min-width: 0; }
-.register-card .field > label {
+
+.register-card h1 {
+    font-size: 1.65rem;
+}
+
+.register-card .login-subtitle {
+    color: #f0d5dc;
+    margin-bottom: 28px;
+}
+
+.register-card .field {
+    margin-bottom: 18px;
+    min-width: 0;
+}
+
+.register-card .field>label {
     font-size: .6875rem;
     text-transform: uppercase;
     letter-spacing: .06em;
     color: #f6dfe4;
     margin-bottom: 8px;
 }
-.register-card .field > input {
+
+.register-card .field>input {
     display: block;
     width: 100%;
     min-width: 0;
@@ -31,29 +50,142 @@
     color: #fff;
     font-size: 1rem;
 }
-.register-card .field > input::placeholder { color: #e4c4cd; opacity: 1; font-size: .8125rem; }
-.register-card .field > input:focus { border-color: #fff; }
-.password-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.password-grid .field { margin-bottom: 8px; }
-.password-options { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.password-options p { color: #f0d5dc; font-size: .6875rem; margin: 0; }
-.show-passwords { background: transparent; color: #f9e6ea; border: 0; min-height: 44px; padding: 8px 0; font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
-.field-error { color: #ffb4c4; font-size: .8125rem; line-height: 1.5; margin: 0 0 14px; }
-.field-error:empty { display: none; }
-.terms-choice { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; }
-.terms-choice input { accent-color: #940000; width: 17px; height: 17px; margin: 3px 0; flex-shrink: 0; }
-.terms-choice label { font-size: .75rem; line-height: 1.8; cursor: pointer; }
-.terms-details { margin: 0 0 20px; }
-.terms-details summary { width: fit-content; padding: 12px 0; min-height: 44px; color: #f9e6ea; font-size: .75rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-.terms-content { font-size: .8125rem; line-height: 1.7; color: #f6dfe4; overflow-wrap: anywhere; border-top: 1px solid #ffffff20; }
-.terms-content ul { padding-left: 22px; }
-.register-card .login-submit { border-radius: 8px; }
 
-.register-card .signup-link { border-top: 1px solid #ffffff14; padding-top: 22px; margin-top: 24px; color: #f0d5dc; }
-.register-card .signup-link a { color: #fff; }
-.register-card .login-alert ul { padding-left: 18px; margin: 0; }
+.register-card .field>input::placeholder {
+    color: #e4c4cd;
+    opacity: 1;
+    font-size: .8125rem;
+}
+
+.register-card .field>input:focus {
+    border-color: #fff;
+}
+
+.password-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.password-grid .field {
+    margin-bottom: 8px;
+}
+
+.password-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.password-options p {
+    color: #f0d5dc;
+    font-size: .6875rem;
+    margin: 0;
+}
+
+.show-passwords {
+    background: transparent;
+    color: #f9e6ea;
+    border: 0;
+    min-height: 44px;
+    padding: 8px 0;
+    font-size: .75rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.field-error {
+    color: #ffb4c4;
+    font-size: .8125rem;
+    line-height: 1.5;
+    margin: 0 0 14px;
+}
+
+.field-error:empty {
+    display: none;
+}
+
+.terms-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.terms-choice input {
+    accent-color: #940000;
+    width: 17px;
+    height: 17px;
+    margin: 3px 0;
+    flex-shrink: 0;
+}
+
+.terms-choice label {
+    font-size: .75rem;
+    line-height: 1.8;
+    cursor: pointer;
+}
+
+.terms-details {
+    margin: 0 0 20px;
+}
+
+.terms-details summary {
+    width: fit-content;
+    padding: 12px 0;
+    min-height: 44px;
+    color: #f9e6ea;
+    font-size: .75rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.terms-content {
+    font-size: .8125rem;
+    line-height: 1.7;
+    color: #f6dfe4;
+    overflow-wrap: anywhere;
+    border-top: 1px solid #ffffff20;
+}
+
+.terms-content ul {
+    padding-left: 22px;
+}
+
+.register-card .login-submit {
+    border-radius: 8px;
+}
+
+.register-card .signup-link {
+    border-top: 1px solid #ffffff14;
+    padding-top: 22px;
+    margin-top: 24px;
+    color: #f0d5dc;
+}
+
+.register-card .signup-link a {
+    color: #fff;
+}
+
+.register-card .login-alert ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
 @media (max-width: 380px) {
-    .register-card { padding: 28px 22px; }
-    .password-grid { grid-template-columns: 1fr; gap: 10px; }
-    .desktop-break { display: none; }
+    .register-card {
+        padding: 28px 22px;
+    }
+
+    .password-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .desktop-break {
+        display: none;
+    }
 }
