@@ -1,5 +1,28 @@
 /* ALTERADO: harmoniza os textos e links da recuperação com o login. */
-.seguranca-reiniciar { margin-top: 20px; text-align: center; }
-.seguranca-reiniciar button { background: transparent; color: #f9e6ea; border: 0; text-decoration: underline; cursor: pointer; padding: 12px; font: inherit; }
-.seguranca-teste { font-size: .8rem; line-height: 1.6; color: #f0d5dc; margin: 24px 0 0; }
-#codigo { text-align: center; font-size: 1.4rem; letter-spacing: .2em; }
+.seguranca-reiniciar {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.seguranca-reiniciar button {
+    background: transparent;
+    color: #f9e6ea;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px;
+    font: inherit;
+}
+
+.seguranca-teste {
+    font-size: .8rem;
+    line-height: 1.6;
+    color: #f0d5dc;
+    margin: 24px 0 0;
+}
+
+#codigo {
+    text-align: center;
+    font-size: 1.4rem;
+    letter-spacing: .2em;
+}
