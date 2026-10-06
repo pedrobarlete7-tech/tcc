@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // NOVO: códigos de uso único, prazo de dez minutos e limite de tentativas.
 function seguranca_conta(PDO $pdo, int $id): ?array
@@ -62,14 +63,20 @@ function seguranca_conferir(PDO $pdo, string $id, string $codigo, string $finali
         $q = $pdo->prepare('SELECT * FROM codigo_seguranca WHERE id = ? AND finalidade = ? FOR UPDATE');
         $q->execute([$id, $finalidade]);
         $registro = $q->fetch(PDO::FETCH_ASSOC);
-        if (!$registro || $registro['usado'] || $registro['tentativas'] >= 5 || $registro['expira_em'] < time()) { $pdo->commit(); return null; }
+        if (!$registro || $registro['usado'] || $registro['tentativas'] >= 5 || $registro['expira_em'] < time()) {
+            $pdo->commit();
+            return null;
+        }
         $conta = seguranca_conta($pdo, (int) $registro['id_usuario']);
         $valido = $conta && (int) $conta['versao'] === (int) $registro['versao'] && preg_match('/^[0-9]{8}$/D', $codigo) && password_verify($codigo, $registro['codigo_hash']);
         $q = $pdo->prepare('UPDATE codigo_seguranca SET tentativas = tentativas + 1, usado = ? WHERE id = ?');
         $q->execute([$valido ? 1 : 0, $id]);
         $pdo->commit();
         return $valido ? $conta : null;
-    } catch (Throwable $e) { if ($pdo->inTransaction()) $pdo->rollBack(); throw $e; }
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        throw $e;
+    }
 }
 
 function seguranca_alterar(PDO $pdo, int $id, int $versao, ?string $senha, ?int $fator): void
@@ -91,5 +98,8 @@ function seguranca_alterar(PDO $pdo, int $id, int $versao, ?string $senha, ?int 
         $q = $pdo->prepare('DELETE FROM codigo_seguranca WHERE id_usuario = ?');
         $q->execute([$id]);
         $pdo->commit();
-    } catch (Throwable $e) { if ($pdo->inTransaction()) $pdo->rollBack(); throw $e; }
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        throw $e;
+    }
 }
