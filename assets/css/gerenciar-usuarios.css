@@ -1,0 +1,184 @@
+/* NOVO: organiza a gestão de usuários no celular e nos temas claro e escuro. */
+.usuarios-painel,
+.usuarios-card {
+    background: var(--surface, #fff);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-block: 20px;
+}
+
+.usuarios label {
+    display: grid;
+    gap: 8px;
+    font-weight: 600;
+    min-width: 0;
+}
+
+.usuarios input,
+.usuarios select {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font: inherit;
+    color: var(--text);
+    background: var(--soft);
+}
+
+.usuarios input:focus-visible,
+.usuarios select:focus-visible {
+    outline: 2px solid var(--wine);
+    outline-offset: 2px;
+}
+
+.usuarios-editar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.usuarios-nota,
+.usuarios-editar .usuarios-acoes {
+    grid-column: 1/-1;
+}
+
+.usuarios-nota {
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.usuarios-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 16px;
+}
+
+.usuarios-filtros label {
+    flex: 1 1 180px;
+}
+
+.usuarios-filtros label:first-child {
+    flex: 2 1 250px;
+}
+
+.usuarios-botao {
+    min-height: 46px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: #940000;
+    cursor: pointer;
+}
+
+.usuarios-botao:hover {
+    background: #710000;
+}
+
+.usuarios-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-block: 20px;
+}
+
+.usuarios-lista {
+    display: grid;
+    gap: 12px;
+}
+
+.usuarios-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 0;
+}
+
+.usuarios-dados {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.usuarios-card h2 {
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+}
+
+.usuarios-card p {
+    margin: 0 0 10px;
+    color: var(--muted);
+}
+
+.usuarios-avatar {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--wine);
+    background: var(--soft);
+    font-weight: 700;
+}
+
+.usuarios-tag {
+    display: inline-block;
+    font-size: .8rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--soft);
+}
+
+.usuarios-alerta {
+    padding: 16px;
+    border: 1px solid var(--wine);
+    border-radius: 10px;
+}
+
+.usuarios-dialog {
+    width: min(520px, calc(100vw - 32px));
+    max-height: 85vh;
+    overflow: auto;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--wine);
+    border-radius: 18px;
+    color: var(--text);
+    background: var(--surface, #fff);
+}
+
+.usuarios-dialog::backdrop {
+    background: #0008;
+}
+
+.usuarios-dialog p {
+    line-height: 1.6;
+}
+
+@media(max-width:600px) {
+    .usuarios-editar {
+        grid-template-columns: 1fr;
+    }
+
+    .usuarios-card {
+        flex-wrap: wrap;
+        padding: 18px;
+    }
+
+    .usuarios-card>.admin-link {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .usuarios-painel {
+        padding: 18px;
+    }
+}
