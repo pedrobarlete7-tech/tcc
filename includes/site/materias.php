@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // NOVO: reutiliza a conexão configurada para o XAMPP.
