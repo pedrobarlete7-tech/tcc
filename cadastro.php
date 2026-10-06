@@ -2,7 +2,10 @@
 // ALTERADO: salva contas de aluno com senha protegida na tabela usuario.
 require_once __DIR__ . '/includes/site/auth.php';
 header('Cache-Control: no-store');
-if ($autenticado) { header('Location: index.php', true, 303); exit; }
+if ($autenticado) {
+    header('Location: index.php', true, 303);
+    exit;
+}
 $nome = '';
 $email = '';
 $aceite = false;
@@ -42,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <script src="assets/js/tema.js"></script>
@@ -53,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="assets/js/cadastro.js" defer></script>
     <link rel="stylesheet" href="assets/css/tema.css">
 </head>
+
 <body class="login-page register-page">
     <header class="login-header">
         <a class="login-brand" href="index.php" aria-label="EnsinoTec — início">EnsinoTec</a>
@@ -63,11 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1 id="register-title">Crie sua conta</h1>
             <p class="login-subtitle">Junte-se ao EnsinoTec e comece sua<br class="desktop-break"> jornada de aprendizagem.</p>
             <?php if ($erros): ?>
-            <div class="login-alert" role="alert"><ul>
-                <?php foreach ($erros as $erro): ?>
-                <li><?= site_escape($erro) ?></li>
-                <?php endforeach; ?>
-            </ul></div>
+                <div class="login-alert" role="alert">
+                    <ul>
+                        <?php foreach ($erros as $erro): ?>
+                            <li><?= site_escape($erro) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             <?php endif; ?>
             <form action="cadastro.php" method="post">
                 <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
@@ -109,4 +116,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
     <footer class="login-footer">© 2026 EnsinoTec — Todos os direitos reservados</footer>
 </body>
+
 </html>
