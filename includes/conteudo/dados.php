@@ -1,7 +1,8 @@
 <?php
-declare(strict_types=1);
 
-// ALTERADO: consulta todos os registros relacionados ao conteúdo, sem limites fixos.
+declare(strict_types=1);
+// ALTERADO: fornece IDs das alternativas para responder às questões.
+
 function carregar_conteudo(PDO $pdo, int $id): ?array
 {
     $consulta = $pdo->prepare(
@@ -17,7 +18,7 @@ function carregar_conteudo(PDO $pdo, int $id): ?array
     $consultas = [
         'resumos' => 'SELECT id_resumo, caminho_imagem, descricao FROM resumo WHERE id_conteudo = ? ORDER BY id_resumo',
         'videos' => 'SELECT id_video, titulo, url_video FROM video WHERE id_conteudo = ? ORDER BY id_video',
-        'exercicios' => 'SELECT id_exercicio, pergunta FROM exercicio WHERE id_conteudo = ? ORDER BY id_exercicio',
+        'exercicios' => 'SELECT e.id_exercicio, e.pergunta, EXISTS (SELECT 1 FROM alternativa a WHERE a.id_exercicio=e.id_exercicio AND a.correta=1) AS pode_responder FROM exercicio e WHERE e.id_conteudo = ? ORDER BY id_exercicio',
     ];
     foreach ($consultas as $chave => $sql) {
         $consulta = $pdo->prepare($sql);
@@ -25,9 +26,8 @@ function carregar_conteudo(PDO $pdo, int $id): ?array
         $conteudo[$chave] = $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ALTERADO: busca alternativas e imagens em lote, sem consultar para cada questão.
     $consulta = $pdo->prepare(
-        'SELECT a.id_exercicio, a.texto FROM alternativa a
+        'SELECT a.id_exercicio, a.id_alternativa, a.texto FROM alternativa a
          JOIN exercicio e ON e.id_exercicio = a.id_exercicio
          WHERE e.id_conteudo = ? ORDER BY a.id_alternativa'
     );
@@ -55,7 +55,6 @@ function carregar_conteudo(PDO $pdo, int $id): ?array
     return $conteudo;
 }
 
-// ALTERADO: aceita URLs HTTP(S) e arquivos existentes dentro do projeto.
 function url_midia(string $valor): ?string
 {
     $valor = trim($valor);
