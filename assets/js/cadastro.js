@@ -12,6 +12,7 @@
         botao.textContent = mostrar ? 'Ocultar senhas' : 'Mostrar senhas';
         botao.setAttribute('aria-pressed', String(mostrar));
     });
+
     function validar() {
         const mensagem = confirmar.value && senha.value !== confirmar.value ? 'As senhas não coincidem.' : '';
         confirmar.setCustomValidity(mensagem);
