@@ -13,7 +13,10 @@
   const form = dialog.querySelector('form');
   let submitting = false;
   form.addEventListener('submit', event => {
-    if (submitting) { event.preventDefault(); return; }
+    if (submitting) {
+      event.preventDefault();
+      return;
+    }
     submitting = true;
     const button = form.querySelector('button[type="submit"]');
     button.textContent = 'Desfazendo…';
