@@ -1,19 +1,24 @@
 <?php
-// ALTERADO: navbar e footer atuais, preservando o formulário e as informações originais.
+// ALTERADO: permite várias linhas no problema, com limite de 1.000 caracteres e contador.
+require_once __DIR__ . '/includes/site/auth.php';
+header('Cache-Control: no-store');
+$nomeContato = $autenticado ? (string) $contaAtual['nome'] : '';
+
+
 $tituloPagina = 'Contato — EnsinoTec';
-$estilosPagina = ['assets/css/contato.css'];
+$estilosPagina = ['assets/css/contato.css?v=mensagem-2'];
 require __DIR__ . '/includes/site/header.php';
 ?>
 <main class="pagina-contato" id="conteudo-principal" tabindex="-1">
-<section class="contato">
+    <section class="contato">
 
         <div class="formulario">
 
-            <h1>Contate-nos</h1>
+            <h1><span data-i18n="Contate-nos">Contate-nos</span></h1>
 
             <p class="subtitulo">
-                Alguma pergunta ou observação? Basta nos<br>
-                escrever uma mensagem!
+                <span data-i18n="Alguma pergunta ou observação? Basta nos">Alguma pergunta ou observação? Basta nos</span><br>
+                <span data-i18n="escrever uma mensagem!">escrever uma mensagem!</span>
             </p>
 
 
@@ -23,40 +28,33 @@ require __DIR__ . '/includes/site/header.php';
                 <div class="campos">
 
 
-                    
+
 
                     <div class="campo">
 
                         <label for="nome">
-                            Nome
+                            <span data-i18n="Nome">Nome</span>
                         </label>
 
                         <input
                             type="text"
                             id="nome"
                             name="nome"
-                            placeholder="Diga-nos seu nome"
-                            required
-                        >
+                            value="<?= site_escape($nomeContato) ?>"
+                            placeholder="Entre na sua conta para identificar seu nome"
+                            readonly
+                            aria-readonly="true">
 
                     </div>
 
 
-                    
+
 
                     <div class="campo">
 
-                        <label for="problema">
-                            Problema
-                        </label>
-
-						    <input
-                            type="text"
-                            id="problema"
-                            name="problema"
-                            placeholder="Diga-nos seu problema"
-                            required
-                        >
+                        <label for="problema"><span data-i18n="Problema">Problema</span></label>
+                        <textarea id="problema" name="problema" rows="4" maxlength="1000" wrap="soft" placeholder="Diga-nos seu problema" data-i18n-placeholder="Diga-nos seu problema" aria-describedby="problema-limite" required></textarea>
+                        <small id="problema-limite" class="contato-contador"><span id="problema-contagem">0</span> / 1.000 caracteres</small>
 
                     </div>
 
@@ -64,10 +62,11 @@ require __DIR__ . '/includes/site/header.php';
                 </div>
 
 
-                
 
-                <button type="submit">
-                    ENVIAR
+
+                <?php if (!$autenticado): ?><p><a href="login.php">Entre na sua conta para usar o formulário de contato.</a></p><?php endif; ?>
+                <button type="submit" <?= !$autenticado ? 'disabled' : '' ?>>
+                    <span data-i18n="ENVIAR">ENVIAR</span>
                 </button>
 
 
@@ -79,26 +78,25 @@ require __DIR__ . '/includes/site/header.php';
 
 
 
-    
+
 
     <section class="informacoes">
 
 
-        
+
 
         <div class="info">
 
 
-            
+
 
             <div class="icone">
 
                 <svg
                     viewBox="0 0 64 64"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
+                    xmlns="http://www.w3.org/2000/svg">
 
-                    
+
 
                     <path
                         d="M7 28L32 9L57 28"
@@ -106,56 +104,50 @@ require __DIR__ . '/includes/site/header.php';
                         stroke="white"
                         stroke-width="5"
                         stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
+                        stroke-linejoin="round" />
 
 
-                    
+
 
                     <path
                         d="M12 26V54H52V26"
                         fill="none"
                         stroke="white"
                         stroke-width="5"
-                        stroke-linejoin="round"
-                    />
+                        stroke-linejoin="round" />
 
 
-                    
+
 
                     <path
                         d="M25 54V38H39V54"
                         fill="none"
                         stroke="white"
-                        stroke-width="5"
-                    />
+                        stroke-width="5" />
 
 
-                    
+
 
                     <rect
                         x="18"
                         y="31"
                         width="5"
                         height="5"
-                        fill="white"
-                    />
+                        fill="white" />
 
                     <rect
                         x="29"
                         y="31"
                         width="5"
                         height="5"
-                        fill="white"
-                    />
+                        fill="white" />
 
                     <rect
                         x="40"
                         y="31"
                         width="5"
                         height="5"
-                        fill="white"
-                    />
+                        fill="white" />
 
                 </svg>
 
@@ -163,13 +155,13 @@ require __DIR__ . '/includes/site/header.php';
 
 
             <h2>
-                SOBRE A ESCOLA
+                <span data-i18n="SOBRE A ESCOLA">SOBRE A ESCOLA</span>
             </h2>
 
 
             <p>
-                Educação<br>
-                Ensino e aprendizagem
+                <span data-i18n="Educação">Educação</span><br>
+                <span data-i18n="Ensino e aprendizagem">Ensino e aprendizagem</span>
             </p>
 
 
@@ -177,19 +169,18 @@ require __DIR__ . '/includes/site/header.php';
 
 
 
-        
+
 
         <div class="info">
 
 
-            
+
 
             <div class="icone">
 
                 <svg
                     viewBox="0 0 64 64"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
+                    xmlns="http://www.w3.org/2000/svg">
 
                     <path
                         d="M32 7
@@ -197,15 +188,13 @@ require __DIR__ . '/includes/site/header.php';
                            C13 41 32 56 32 56
                            C32 56 51 41 51 27
                            C51 16 43 7 32 7Z"
-                        fill="white"
-                    />
+                        fill="white" />
 
                     <circle
                         cx="32"
                         cy="27"
                         r="7"
-                        fill="#e00000"
-                    />
+                        fill="#e00000" />
 
                 </svg>
 
@@ -213,7 +202,7 @@ require __DIR__ . '/includes/site/header.php';
 
 
             <h2>
-                ENDEREÇO
+                <span data-i18n="ENDEREÇO">ENDEREÇO</span>
             </h2>
 
 
@@ -228,19 +217,18 @@ require __DIR__ . '/includes/site/header.php';
 
 
 
-        
+
 
         <div class="info">
 
 
-            
+
 
             <div class="icone">
 
                 <svg
                     viewBox="0 0 64 64"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
+                    xmlns="http://www.w3.org/2000/svg">
 
                     <path
                         d="M20 10
@@ -257,8 +245,7 @@ require __DIR__ . '/includes/site/header.php';
                            C29 22 29 20 28 18
                            L24 12
                            C23 11 21 10 20 10Z"
-                        fill="white"
-                    />
+                        fill="white" />
 
                 </svg>
 
@@ -266,7 +253,7 @@ require __DIR__ . '/includes/site/header.php';
 
 
             <h2>
-                TELEFONES
+                <span data-i18n="TELEFONES">TELEFONES</span>
             </h2>
 
 
@@ -281,4 +268,5 @@ require __DIR__ . '/includes/site/header.php';
 
     </section>
 </main>
+<script src="assets/js/contato.js" defer></script>
 <?php require __DIR__ . '/includes/site/footer.php'; ?>
