@@ -17,7 +17,7 @@ function site_escape(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-// ALTERADO: encerra sessões antigas após troca de senha ou mudança de segurança.
+// ALTERADO: carrega a foto atual da conta também para a navbar.
 if (!empty($_SESSION['usuario']['id_usuario'])) {
     require_once __DIR__ . '/../../actions/conexao.php';
     require_once __DIR__ . '/seguranca.php';
@@ -35,7 +35,8 @@ if (!empty($_SESSION['usuario']['id_usuario'])) {
 $usuario = $_SESSION['usuario'] ?? null;
 $autenticado = is_array($usuario) && !empty($usuario['id_usuario']);
 $nomeUsuario = $autenticado ? (string) ($usuario['nome'] ?? 'Meu perfil') : '';
-$fotoUsuario = $autenticado ? (string) ($usuario['foto_perfil'] ?? '') : '';
+require_once __DIR__ . '/foto-perfil.php';
+$fotoUsuario = $autenticado ? foto_perfil_url((int)$usuario['id_usuario']) : '';
 if (!preg_match('~^uploads/perfis/[a-zA-Z0-9_/-]+\.(?:png|jpe?g|webp)$~i', $fotoUsuario)) {
     $fotoUsuario = '';
 }
