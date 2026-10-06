@@ -20,7 +20,10 @@
         abrir.focus();
     });
     form.addEventListener('submit', event => {
-        if (enviando) { event.preventDefault(); return; }
+        if (enviando) {
+            event.preventDefault();
+            return;
+        }
         enviando = true;
         form.setAttribute('aria-busy', 'true');
     });
