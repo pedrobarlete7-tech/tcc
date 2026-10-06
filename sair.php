@@ -13,9 +13,12 @@ if (!auth_csrf_valido()) {
 $_SESSION = [];
 $cookie = session_get_cookie_params();
 setcookie(session_name(), '', [
-    'expires' => time() - 3600, 'path' => $cookie['path'],
-    'domain' => $cookie['domain'], 'secure' => $cookie['secure'],
-    'httponly' => true, 'samesite' => 'Lax',
+    'expires' => time() - 3600,
+    'path' => $cookie['path'],
+    'domain' => $cookie['domain'],
+    'secure' => $cookie['secure'],
+    'httponly' => true,
+    'samesite' => 'Lax',
 ]);
 session_destroy();
 header('Location: login.php', true, 303);
