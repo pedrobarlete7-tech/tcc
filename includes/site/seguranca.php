@@ -1,7 +1,6 @@
 <?php
-
 declare(strict_types=1);
-// NOVO: códigos de uso único, prazo de dez minutos e limite de tentativas.
+// ALTERADO: mantém os fluxos por e-mail indisponíveis até a configuração do envio na hospedagem.
 function seguranca_conta(PDO $pdo, int $id): ?array
 {
     $q = $pdo->prepare('SELECT u.*, COALESCE(s.dois_fatores, 0) AS dois_fatores, COALESCE(s.versao, 1) AS versao FROM usuario u LEFT JOIN usuario_seguranca s ON s.id_usuario = u.id_usuario WHERE u.id_usuario = ? AND u.ativo = 1');
@@ -9,28 +8,19 @@ function seguranca_conta(PDO $pdo, int $id): ?array
     return $q->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
+function seguranca_email_disponivel(): bool
+{
+    return false;
+}
+
 function seguranca_email(string $email, string $codigo, string $finalidade): void
 {
-    $config = require __DIR__ . '/../../config/email.php';
-    if ($config['modo'] !== 'local' || !in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)) {
-        throw new RuntimeException('O modo de e-mail local só funciona no localhost.');
-    }
-    $pasta = $config['pasta'];
-    if (!is_dir($pasta) && !mkdir($pasta, 0700, true) && !is_dir($pasta)) throw new RuntimeException('Falha ao preparar a pasta de e-mails.');
-    $real = realpath($pasta);
-    $publico = realpath(__DIR__ . '/../..');
-    $documento = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: $publico;
-    foreach ([$publico, $documento] as $raiz) {
-        if (str_starts_with(strtolower(str_replace('\\', '/', $real) . '/'), strtolower(str_replace('\\', '/', $raiz) . '/'))) throw new RuntimeException('A pasta de e-mails deve ficar fora do site.');
-    }
-    $texto = "TESTE LOCAL — nenhum e-mail foi enviado.\nPara: $email\nFinalidade: $finalidade\nCódigo: $codigo\nVálido por 10 minutos. Não compartilhe este código.\n";
-    $arquivo = $real . DIRECTORY_SEPARATOR . date('Ymd-His') . '-' . bin2hex(random_bytes(6)) . '.txt';
-    if (file_put_contents($arquivo, $texto, LOCK_EX) === false) throw new RuntimeException('Falha ao gravar o e-mail de teste.');
-    chmod($arquivo, 0600);
+    throw new RuntimeException('O envio de e-mails está temporariamente indisponível.');
 }
 
 function seguranca_emitir(PDO $pdo, array $conta, string $finalidade): string
 {
+    if (!seguranca_email_disponivel()) throw new RuntimeException('O envio de e-mails está temporariamente indisponível.');
     $idUsuario = (int) $conta['id_usuario'];
     $pdo->beginTransaction();
     try {
@@ -63,20 +53,14 @@ function seguranca_conferir(PDO $pdo, string $id, string $codigo, string $finali
         $q = $pdo->prepare('SELECT * FROM codigo_seguranca WHERE id = ? AND finalidade = ? FOR UPDATE');
         $q->execute([$id, $finalidade]);
         $registro = $q->fetch(PDO::FETCH_ASSOC);
-        if (!$registro || $registro['usado'] || $registro['tentativas'] >= 5 || $registro['expira_em'] < time()) {
-            $pdo->commit();
-            return null;
-        }
+        if (!$registro || $registro['usado'] || $registro['tentativas'] >= 5 || $registro['expira_em'] < time()) { $pdo->commit(); return null; }
         $conta = seguranca_conta($pdo, (int) $registro['id_usuario']);
         $valido = $conta && (int) $conta['versao'] === (int) $registro['versao'] && preg_match('/^[0-9]{8}$/D', $codigo) && password_verify($codigo, $registro['codigo_hash']);
         $q = $pdo->prepare('UPDATE codigo_seguranca SET tentativas = tentativas + 1, usado = ? WHERE id = ?');
         $q->execute([$valido ? 1 : 0, $id]);
         $pdo->commit();
         return $valido ? $conta : null;
-    } catch (Throwable $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
-        throw $e;
-    }
+    } catch (Throwable $e) { if ($pdo->inTransaction()) $pdo->rollBack(); throw $e; }
 }
 
 function seguranca_alterar(PDO $pdo, int $id, int $versao, ?string $senha, ?int $fator): void
@@ -98,8 +82,5 @@ function seguranca_alterar(PDO $pdo, int $id, int $versao, ?string $senha, ?int 
         $q = $pdo->prepare('DELETE FROM codigo_seguranca WHERE id_usuario = ?');
         $q->execute([$id]);
         $pdo->commit();
-    } catch (Throwable $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
-        throw $e;
-    }
+    } catch (Throwable $e) { if ($pdo->inTransaction()) $pdo->rollBack(); throw $e; }
 }
