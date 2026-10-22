@@ -1,16 +1,7 @@
 <?php
 declare(strict_types=1);
 
-if (session_status() === PHP_SESSION_NONE) {
-    ini_set('session.use_strict_mode', '1');
-    session_set_cookie_params([
-        'httponly' => true,
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Lax',
-        'path' => '/',
-    ]);
-    session_start();
-}
+require_once __DIR__ . '/sessao.php';
 
 function site_escape(string $value): string
 {
@@ -24,8 +15,9 @@ if (!empty($_SESSION['usuario']['id_usuario'])) {
     try {
         $contaAtual = seguranca_conta($pdo, (int) $_SESSION['usuario']['id_usuario']);
         if (!$contaAtual || (int) ($_SESSION['auth_versao'] ?? 0) !== (int) $contaAtual['versao']) {
-            unset($_SESSION['usuario'], $_SESSION['auth_versao']);
+            unset($_SESSION['usuario'], $_SESSION['auth_versao'], $_SESSION['manter_conectado_ate'], $_SESSION['manter_conectado_pendente']);
             session_regenerate_id(true);
+            site_sessao_cookie();
         }
     } catch (PDOException $e) {
         http_response_code(503);
