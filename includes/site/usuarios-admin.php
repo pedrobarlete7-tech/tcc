@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
+require_once __DIR__ . '/senha.php';
 // NOVO: valida alterações de contas e encerra sessões após mudanças de acesso.
 function usuarios_admin_salvar(PDO $pdo, int $ator, int $id, string $nome, string $email, string $tipo, int $ativo, string $revisao): void
 {
     if ($id < 1 || mb_strlen($nome) < 2 || mb_strlen($nome) > 100) throw new DomainException('Informe um nome de 2 a 100 caracteres.');
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100) throw new DomainException('Informe um e-mail válido de até 100 caracteres.');
+    if (!email_valido($email)) throw new DomainException('Informe um e-mail válido com até 150 caracteres e até 64 antes do @.');
     if (!in_array($tipo, ['aluno', 'professor', 'administrador'], true) || !in_array($ativo, [0, 1], true)) throw new DomainException('Perfil ou situação inválidos.');
     $pdo->beginTransaction();
     try {
