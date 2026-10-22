@@ -1,299 +1,162 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #ffffff;
-    min-height: 100vh;
-}
-
+/* ALTERADO: padroniza os cards da página Sobre e organiza os integrantes por equipe. */
 .sobre {
-
-    max-width: 1200px;
-    margin: 70px auto;
-    padding: 20px;
-
+  width: min(100%, 1200px);
+  box-sizing: border-box;
+  margin: 48px auto 64px;
+  padding: 0 24px;
+  color: var(--text, #172334);
+  line-height: 1.65;
 }
-
-.titulo {
-
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 45px;
-    color: #780000;
-    font-weight: bold;
-
+.sobre *,
+.sobre *::before,
+.sobre *::after {
+  box-sizing: border-box;
 }
-
-.proposito {
-
-    border-radius: 15px;
-    padding: 35px;
-    margin-bottom: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-
+.sobre .titulo {
+  margin: 0 0 32px;
+  text-align: center;
+  color: var(--wine, #940000);
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.2;
 }
-
-.proposito h2 {
-
-    color: #780000;
-    margin-bottom: 20px;
-
+.sobre :is(.proposito, .historia, .escola, .porque, .equipe) {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--border, #dce3ed);
+  border-radius: 18px;
+  background: var(--surface, #fff);
+  box-shadow: 0 4px 16px rgb(20 32 50 / 5%);
 }
-
-.proposito p {
-
-    text-align: justify;
-    line-height: 1.8;
-    font-size: 18px;
-
+.sobre :is(.proposito, .historia, .escola, .porque) {
+  margin: 0 0 24px;
 }
-
-
-
-.historia {
-
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    padding: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-    border-radius: 15px;
-    border-radius: 15px;
-    margin-bottom: 35px;
-
-}
-
-.historia h2 {
-    color: #780000;
-}
-
-.historia p {
-
-    text-align: justify;
-    line-height: 1.8;
-    font-size: 18px;
-    width: 500px;
-
-}
-
-.historia-texto {
-
-    flex: 1;
-
-}
-
-.historia_video {
-
-    flex: 1;
-    height: 320px;
-    width: 1000px;
-    background: #dcdcdc;
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: #666;
-
-}
-
-.escola {
-    padding: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-    border-radius: 15px;
-    margin-bottom: 35px;
-}
-
-.escola h2 {
-    color: #780000;
-}
-
-.escola p {
-    text-align: justify;
-    line-height: 1.8;
-    font-size: 18px;
-}
-
-
-
-.equipe {
-
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    margin-top: 20px;
-    padding: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-    border-radius: 15px;
-    margin-bottom: 35px;
-
-}
-
-.membro {
-
-    text-align: center;
-    margin-top: 20px;
-    padding: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-    border-radius: 15px;
-    margin-bottom: 35px;
-}
-
-.membro h2 {
-    color: #780000;
-}
-
-.foto {
-
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: #d8d8d8;
-    margin: auto;
-    margin-bottom: 15px;
-
-}
-
-
-
-.porque {
-
-    text-align: center;
-    margin-top: 20px;
-    padding: 35px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, .12);
-    border-radius: 15px;
-
-}
-
-.porque h2 {
-    color: #780000;
-}
-
-.btn-projeto {
-
-    display: inline-block;
-    margin-top: 20px;
-    background: #780000;
-    color: #fff;
-    padding: 15px 35px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 18px;
-    transition: .3s;
-
-}
-
-.btn-projeto:hover {
-
-    background: #9b0000;
-
-}
-
-
-
-@media(max-width:900px) {
-
-    .historia {
-
-        flex-direction: column;
-
-    }
-
-    .equipe {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-}
-
-@media(max-width:600px) {
-
-    .equipe {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .historia_video {
-
-        height: 220px;
-
-    }
-
-    .titulo {
-
-        font-size: 35px;
-
-    }
-
-}
-
-/* ALTERADO: preserva a tipografia central antes fornecida pelo Bootstrap. */
-.sobre {
-    line-height: 1.5;
-    color: #212529;
-}
-
-.sobre h1,
-.sobre h2,
-.sobre h4 {
-    margin-top: 0;
-    line-height: 1.2;
-}
-
 .sobre h2 {
-    font-size: calc(1.325rem + .9vw);
-    font-weight: 500;
-    margin-bottom: .5rem;
+  margin: 0 0 16px;
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--wine, #940000);
 }
-
-.sobre h4 {
-    font-size: calc(1.275rem + .3vw);
-    font-weight: 500;
-    margin-bottom: .5rem;
-}
-
 .sobre p {
-    margin-top: 0;
-    margin-bottom: 1rem;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
 }
-
-.sobre .proposito h2 {
-    margin-bottom: 20px;
+.sobre .historia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 28px;
 }
-
-@media (min-width: 1200px) {
-    .sobre h2 {
-        font-size: 2rem;
-    }
-
-    .sobre h4 {
-        font-size: 1.5rem;
-    }
+.sobre .historia_texto {
+  min-width: 0;
 }
-
-/* ALTERADO: ajuste autorizado para a seção de história caber no celular. */
-.sobre {
-    width: min(100%, 1200px);
+.sobre .historia_video {
+  min-width: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--soft, #f1f5f9);
+  border-radius: 12px;
 }
-
-@media (max-width: 900px) {
-
-    .sobre .historia_texto,
-    .sobre .historia p,
-    .sobre .historia_video {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .sobre .historia_video {
-        flex: none;
-    }
-
-    .sobre .historia_video video {
-        max-width: 100%;
-        max-height: 100%;
-    }
+.sobre .historia_video video {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+}
+.sobre .pessoas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 40px 0;
+}
+.sobre .pessoas > h2 {
+  grid-column: 1 / -1;
+  max-width: 860px;
+  margin: 0 0 4px;
+  font-size: 22px;
+  color: var(--text, #172334);
+}
+.sobre .equipe {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.sobre .equipe-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border, #dce3ed);
+}
+.sobre .equipe-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 12px;
+  background: var(--accent-bg, #f9eeee);
+  color: var(--wine, #940000);
+  font-size: 14px;
+  font-weight: 700;
+}
+.sobre .equipe h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.sobre .equipe-integrantes {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.sobre .equipe-integrantes li {
+  margin: 0;
+  padding-left: 14px;
+  position: relative;
+  font-size: 15px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.sobre .equipe-integrantes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--wine, #940000);
+  opacity: 0.6;
+}
+@media (max-width: 700px) {
+  .sobre {
+    margin-top: 32px;
+    padding: 0 16px;
+  }
+  .sobre :is(.proposito, .historia, .escola, .porque, .equipe) {
+    padding: 20px;
+  }
+  .sobre .pessoas,
+  .sobre .historia {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sobre .pessoas {
+    margin: 32px 0;
+    gap: 16px;
+  }
+  .sobre h2,
+  .sobre .pessoas > h2 {
+    font-size: 20px;
+  }
 }
