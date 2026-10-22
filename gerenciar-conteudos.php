@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-// ALTERADO: salva a classificação dos conteúdos em JSON, sem novas tabelas.
+// ALTERADO: distingue mídia ausente e mostra a prévia da imagem vinculada.
 require_once __DIR__ . '/includes/site/auth.php';
 require_once __DIR__ . '/includes/conteudo/dados.php';
 require_once __DIR__ . '/includes/conteudo/uploads.php';
@@ -166,12 +166,15 @@ function editor_campo(string $prefixo, string $nome, array $spec, $valor): void
             $urlAtual = url_midia((string)$valor); ?>
             <div class="editor-upload" data-tipo="<?= $midiaTipo ?>" data-limite="<?= upload_limite($midiaTipo) ?>">
                 <input type="hidden" name="<?= site_escape($prefixo . '[' . $nome . ']') ?>" value="<?= site_escape((string)$valor) ?>" data-upload-caminho>
-                <input type="file" id="<?= site_escape($id) ?>" accept="<?= $midiaTipo === 'video' ? 'video/mp4,video/webm' : 'image/jpeg,image/png,image/webp,image/gif' ?>" data-upload-arquivo>
+                <input type="file" name="<?= site_escape($prefixo . '[' . $nome . ']') ?>" id="<?= site_escape($id) ?>" accept="<?= $midiaTipo === 'video' ? 'video/mp4,video/webm' : 'image/jpeg,image/png,image/webp,image/gif' ?>" data-upload-arquivo>
                 <small><?= $midiaTipo === 'video' ? 'MP4 ou WebM' : 'JPG, PNG, WebP ou GIF' ?> · Até <?= number_format(upload_limite($midiaTipo) / 1048576, 1, ',', '.') ?> MB por arquivo.</small>
-                <p data-upload-status role="status"><?= $valor !== '' ? 'Arquivo já vinculado. Selecione outro para substituir.' : 'Selecione um arquivo do seu dispositivo.' ?></p>
+                <p data-upload-status role="status"><?= $urlAtual ? 'Arquivo vinculado. Selecione outro para substituir.' : ($valor !== '' ? 'O caminho está salvo, mas o arquivo não foi encontrado no servidor. Envie a imagem ou o vídeo novamente.' : 'Selecione um arquivo do seu dispositivo.') ?></p>
+                <?php if ($midiaTipo === 'imagem'): ?><img data-upload-imagem <?= !$urlAtual ? 'hidden' : '' ?> <?= $urlAtual ? 'src="' . site_escape($urlAtual) . '"' : '' ?> alt="Prévia da imagem" style="max-width:100%;max-height:220px;object-fit:contain;border-radius:10px;margin:12px 0" onerror="this.hidden=true;this.style.display='none'" onload="this.style.display=this.hidden?'none':'block'">
+                <?php endif; ?>
                 <a data-upload-preview <?= !$urlAtual ? 'hidden' : '' ?> href="<?= site_escape($urlAtual ?? '#') ?>" target="_blank" rel="noopener noreferrer">Abrir arquivo atual ↗</a>
                 <button type="button" class="gestao-botao" data-upload-cancelar hidden>Cancelar envio</button>
-                <noscript>Ative o JavaScript para enviar arquivos.</noscript>
+                <p class="gestao-meta">Escolha o arquivo e clique em “Salvar conteúdo e arquivo” se o envio não iniciar sozinho.</p>
+                <button type="submit" class="gestao-botao" data-upload-salvar>Salvar conteúdo e arquivo</button>
             </div>
         <?php elseif ($tipo === 'textarea'): ?><textarea id="<?= site_escape($id) ?>" name="<?= site_escape($prefixo . '[' . $nome . ']') ?>" maxlength="<?= $max ?>" rows="3"><?= site_escape((string)$valor) ?></textarea>
         <?php else: ?><input id="<?= site_escape($id) ?>" name="<?= site_escape($prefixo . '[' . $nome . ']') ?>" type="<?= $tipo === 'number' ? 'number' : 'text' ?>" value="<?= site_escape((string)$valor) ?>" <?= $tipo === 'number' ? 'min="1" max="' . $max . '"' : 'maxlength="' . $max . '"' ?>><?php endif; ?>
@@ -232,6 +235,8 @@ else try {
     $pronto = true;
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
+            $limitePost = upload_bytes((string)ini_get('post_max_size'));
+            if ($limitePost > 0 && (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > $limitePost) throw new DomainException('O envio ultrapassou o limite total da hospedagem. Envie um arquivo menor de cada vez. Nenhuma alteração foi salva.');
             if (!auth_csrf_valido()) {
                 http_response_code(403);
                 throw new DomainException('O formulário expirou. Atualize a página.');
@@ -274,6 +279,11 @@ else try {
                 if (!$ordem || $ordem > 100000 || !in_array($nivel, ['facil', 'medio', 'avancado'], true)) throw new DomainException('Confira a ordem e a dificuldade.');
                 $subdivisao = editor_id($enviado['id_subdivisao'] ?? null);
                 if ($subdivisao && (int)($arquivoSubdivisoes->dados['grupos'][$subdivisao]['id_materia'] ?? 0) !== $destino) throw new DomainException('Escolha uma subdivisão pertencente à matéria selecionada.');
+                try {
+                    upload_editor_arquivos($enviado, $_FILES['conteudo'] ?? []);
+                } finally {
+                    $dados = array_merge($dados, $enviado);
+                }
                 $colecoes = [];
                 foreach (['resumos', 'videos', 'questoes'] as $tipo) $colecoes[$tipo] = editor_lista($enviado[$tipo] ?? null, $tipo, $id ? ($anterior[$tipo] ?? []) : [], $esquema);
                 if ($id) {
@@ -354,7 +364,7 @@ require __DIR__ . '/includes/site/header.php';
                             <div class="gestao-acoes"><button class="gestao-botao principal" name="confirmar" value="sim">Sim, excluir</button><a class="gestao-botao" href="<?= site_escape($url . '&editar=' . $id) ?>">Cancelar</a></div>
                         </form>
                     <?php else: ?>
-                        <form method="post" id="editor-form" action="<?= site_escape($url . ($id ? '&editar=' . $id : '')) ?>">
+                        <form method="post" enctype="multipart/form-data" id="editor-form" action="<?= site_escape($url . ($id ? '&editar=' . $id : '')) ?>">
                             <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>"><input type="hidden" name="revisao" value="<?= site_escape($revisao) ?>"><input type="hidden" name="acao" value="salvar">
                             <div class="editor-salvamento">
                                 <p id="editor-status" role="status" aria-live="polite">Use “Salvar conteúdo” para gravar suas alterações.</p><button class="gestao-botao principal" type="submit">Salvar conteúdo</button>
@@ -398,8 +408,8 @@ require __DIR__ . '/includes/site/header.php';
                             <div class="gestao-acoes"><button class="gestao-botao principal" type="submit">Salvar conteúdo</button><a class="gestao-botao" href="<?= site_escape($url) ?>">Cancelar</a></div>
                         </form>
                         <?php foreach (array_keys($esquema) as $tipo): ?><template id="modelo-<?= $tipo ?>"><?php editor_item($tipo, '__PREFIX__', [], $esquema); ?></template><?php endforeach; ?>
-                        <script src="assets/js/editor-conteudo.js?v=subdivisoes-1" defer></script>
-                        <script src="assets/js/upload-conteudo.js" defer></script>
+                        <script src="assets/js/editor-conteudo.js?v=upload-fallback-20261008-2" defer></script>
+                        <script src="assets/js/upload-conteudo.js?v=upload-fallback-20261008-2" defer></script>
                     <?php endif; ?>
                 </section>
                 <aside class="gestao-card editor-lista">
