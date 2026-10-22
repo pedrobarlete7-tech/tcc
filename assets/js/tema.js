@@ -63,16 +63,21 @@
             apply();
             status('Prévia de aparência. Clique em Salvar alterações para manter sua escolha.');
         }));
-        document.querySelector('[data-theme-save]') ? .addEventListener('click', save);
-        document.querySelector('[data-theme-cancel]') ? .addEventListener('click', () => {
-            draft = saved;
-            apply();
-            status('A aparência salva foi restaurada.');
-        });
-        document.querySelector('[data-theme-toggle]') ? .addEventListener('click', () => {
-            draft = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-            apply();
-            save();
-        });
+    document.querySelector('[data-theme-save]')?.addEventListener('click', save);
+
+document.querySelector('[data-theme-cancel]')?.addEventListener('click', () => {
+    draft = saved;
+    apply();
+    status('A aparência salva foi restaurada.');
+});
+
+document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    draft = document.documentElement.dataset.theme === 'dark'
+        ? 'light'
+        : 'dark';
+
+    apply();
+    save();
+});
     });
 })();
