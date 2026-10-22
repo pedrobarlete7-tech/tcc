@@ -276,7 +276,7 @@ require __DIR__ . '/includes/site/header.php';
                     </noscript>
                     <dialog id="confirmar-exclusao" class="excluir-dialog" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-descricao">
                         <h2 id="confirmar-titulo"><span data-i18n="Deseja mesmo excluir sua conta?">Deseja mesmo excluir sua conta?</span></h2>
-                        <p id="confirmar-descricao"><span data-i18n="A conta">A conta</span> <strong><?= site_escape((string) $usuario['email']) ?></strong> <span data-i18n="será excluída permanentemente. Você será desconectado do EnsinoTec.">será excluída permanentemente. Você será desconectado do EnsinoTec.</span></p>
+                        <p id="confirmar-descricao"><span data-i18n="A conta">A conta</span> <strong><?= site_escape((string) $usuario['email']) ?></strong> <span data-i   18n="será excluída permanentemente. Você será desconectado do EnsinoTec.">será excluída permanentemente. Você será desconectado do EnsinoTec.</span></p>
                         <form action="configuracoes.php" method="post" id="form-exclusao">
                             <input type="hidden" name="csrf" value="<?= site_escape(auth_token()) ?>">
                             <input type="hidden" name="acao" value="excluir_conta">
@@ -295,4 +295,5 @@ require __DIR__ . '/includes/site/header.php';
     </div>
 </main>
 <script src="assets/js/excluir-conta.js" defer></script>
+<script src="assets/js/tema.js"></script>
 <?php require __DIR__ . '/includes/site/footer.php'; ?>
