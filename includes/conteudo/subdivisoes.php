@@ -1,22 +1,29 @@
 <?php
 
 declare(strict_types=1);
-// NOVO: guarda subdivisões em JSON com bloqueio de gravação e troca atômica do arquivo.
+// ALTERADO: permite consultar sem gravar e identifica falhas de leitura e de permissão.
 final class SubdivisoesArquivo
 {
     private $trava;
     private string $caminho;
+    private bool $gravacao;
     public array $dados;
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, bool $gravacao = true)
     {
+        $this->gravacao = $gravacao;
         $pasta = __DIR__ . '/../../storage';
-        if (!is_dir($pasta) && !@mkdir($pasta, 0755, true) && !is_dir($pasta)) throw new DomainException('Não foi possível criar a pasta storage. Confira a permissão de gravação.');
+        if ($gravacao && !is_dir($pasta) && !@mkdir($pasta, 0755, true) && !is_dir($pasta)) throw new DomainException('Não foi possível criar a pasta storage. Confira a permissão de gravação.');
         $this->caminho = $pasta . '/subdivisoes.json';
-        $this->trava = @fopen($pasta . '/subdivisoes.lock', 'c');
-        if (!$this->trava || !flock($this->trava, LOCK_EX)) throw new DomainException('Não foi possível abrir as subdivisões. Confira a permissão da pasta storage.');
+        if ($gravacao) {
+            $this->trava = @fopen($pasta . '/subdivisoes.lock', 'c');
+            if (!$this->trava || !flock($this->trava, LOCK_EX)) throw new DomainException('Não foi possível abrir as subdivisões. Confira a permissão da pasta storage.');
+        }
         if (is_file($this->caminho)) {
+            $texto = @file_get_contents($this->caminho);
+            if ($texto === false) throw new DomainException('Não foi possível ler storage/subdivisoes.json. Confira a permissão de leitura desse arquivo na hospedagem.');
+            if (str_starts_with($texto, "\xEF\xBB\xBF")) $texto = substr($texto, 3);
             try {
-                $dados = json_decode((string)file_get_contents($this->caminho), true, 512, JSON_THROW_ON_ERROR);
+                $dados = json_decode($texto, true, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
                 throw new DomainException('O arquivo de subdivisões está inválido. Restaure o backup antes de continuar.');
             }
@@ -36,7 +43,7 @@ final class SubdivisoesArquivo
                     foreach ($conteudos as $item) foreach ($titulos as $nome) if (mb_strtolower($item['titulo']) === mb_strtolower($nome)) $this->dados['conteudos'][(int)$item['id_conteudo']] = $id;
                 }
             }
-            $this->gravar($this->dados);
+            if ($gravacao) $this->gravar($this->dados);
         }
     }
     public function lista(): array
@@ -59,6 +66,8 @@ final class SubdivisoesArquivo
     }
     private function gravar(array $dados): void
     {
+        if (!$this->gravacao) throw new DomainException('Reabra o formulário para salvar as subdivisões.');
+        if (!is_writable(dirname($this->caminho))) throw new DomainException('A hospedagem precisa permitir que o PHP grave na pasta storage para salvar as subdivisões.');
         $json = json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         $tmp = tempnam(dirname($this->caminho), 'sub-');
         if (!$tmp) throw new DomainException('Não foi possível preparar o arquivo de subdivisões.');
@@ -70,7 +79,10 @@ final class SubdivisoesArquivo
     }
     public function confirmar(PDO $pdo): void
     {
-        $anterior = json_decode((string)file_get_contents($this->caminho), true, 512, JSON_THROW_ON_ERROR);
+        $texto = @file_get_contents($this->caminho);
+        if ($texto === false) throw new DomainException('Não foi possível ler o arquivo de subdivisões antes de salvar.');
+        if (str_starts_with($texto, "\xEF\xBB\xBF")) $texto = substr($texto, 3);
+        $anterior = json_decode($texto, true, 512, JSON_THROW_ON_ERROR);
         $this->gravar($this->dados);
         try {
             $pdo->commit();
