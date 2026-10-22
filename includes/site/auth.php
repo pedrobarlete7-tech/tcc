@@ -1,6 +1,6 @@
 <?php
-
 declare(strict_types=1);
+require_once __DIR__ . '/senha.php';
 require_once __DIR__ . '/init.php';
 require_once __DIR__ . '/seguranca.php';
 
@@ -19,11 +19,13 @@ function auth_csrf_valido(): bool
 
 function auth_cadastrar(PDO $pdo, string $nome, string $email, string $senha): void
 {
+    if (!email_valido($email)) throw new RuntimeException('Informe um e-mail válido com até 150 caracteres e até 64 antes do @.');
+    if (($erroSenha = senha_erro($senha)) !== '') throw new RuntimeException($erroSenha);
     $consulta = $pdo->prepare('INSERT INTO usuario (nome, email, senha, tipo_usuario, ativo) VALUES (?, ?, ?, ?, ?)');
     $consulta->execute([$nome, $email, password_hash($senha, PASSWORD_BCRYPT), 'aluno', 1]);
 }
 
-function auth_entrar(PDO $pdo, string $email, string $senha): bool
+function auth_entrar(PDO $pdo, string $email, string $senha, bool $manterConectado = false): bool
 {
     $consulta = $pdo->prepare('SELECT id_usuario, nome, email, senha, tipo_usuario, ativo FROM usuario WHERE email = ? LIMIT 1');
     $consulta->execute([$email]);
@@ -33,6 +35,7 @@ function auth_entrar(PDO $pdo, string $email, string $senha): bool
     if (!$conta || !$valida || (int) $conta['ativo'] !== 1) return false;
     $conta = seguranca_conta($pdo, (int) $conta['id_usuario']);
     if (!$conta) return false;
+    $_SESSION['manter_conectado_pendente'] = $manterConectado;
     $recuperado = $_SESSION['login_recuperado'] ?? [];
     unset($_SESSION['login_recuperado']);
     $confirmado = (int) ($recuperado['usuario'] ?? 0) === (int) $conta['id_usuario']
@@ -51,6 +54,7 @@ function auth_entrar(PDO $pdo, string $email, string $senha): bool
 function auth_concluir(array $conta): void
 {
     session_regenerate_id(true);
+    site_sessao_confirmar_login();
     $_SESSION['auth_versao'] = (int) $conta['versao'];
     unset($conta['senha'], $conta['ativo']);
     $_SESSION['usuario'] = $conta;
