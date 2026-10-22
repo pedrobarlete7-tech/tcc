@@ -102,7 +102,7 @@ require __DIR__ . '/includes/site/header.php';
                     <input type="hidden" name="id" value="<?= $editar ?>">
                     <input type="hidden" name="revisao" value="<?= site_escape(usuarios_admin_revisao($contaEditar)) ?>">
                     <label>Nome completo<input name="nome" required minlength="2" maxlength="100" value="<?= site_escape($contaEditar['nome']) ?>"></label>
-                    <label>E-mail<input type="email" name="email" required maxlength="100" value="<?= site_escape($contaEditar['email']) ?>"></label>
+                    <label>E-mail<input type="email" name="email" required maxlength="150" value="<?= site_escape($contaEditar['email']) ?>"></label>
                     <label>Perfil<select name="tipo_usuario" data-original="<?= site_escape($contaEditar['tipo_usuario']) ?>"><?php foreach ($tipos as $v => $r): ?><option value="<?= $v ?>" <?= $contaEditar['tipo_usuario'] === $v ? 'selected' : '' ?>><?= $r ?></option><?php endforeach; ?></select></label>
                     <label>Situação<select name="ativo" data-original="<?= (int)$contaEditar['ativo'] ?>">
                             <option value="1" <?= $contaEditar['ativo'] ? 'selected' : '' ?>>Ativa</option>
