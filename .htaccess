@@ -1,2 +1,8 @@
-# NOVO: página 404 no XAMPP; ajuste /Novo/ se a pasta pública mudar no servidor.
-ErrorDocument 404 /Novo/404.php
+# ALTERADO: página de erro sem depender do nome da pasta de instalação.
+ErrorDocument 404 default
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ 404.php [L]
+</IfModule>
