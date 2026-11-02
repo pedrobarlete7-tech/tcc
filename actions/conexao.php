@@ -3,7 +3,7 @@
 $host = 'localhost';
 $db   = 'tcc';
 $user = 'tcc_user';
-$pass = 'Tcc2026!';
+$pass = '';
 $charset = 'utf8mb4';
 
 try {
